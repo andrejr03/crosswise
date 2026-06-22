@@ -34,6 +34,7 @@ Early Development
 - Slice 3 reconciliation baseline completed.
 - Slice 4 evaluation harness completed.
 - Slice 5 confidence routing and reliability layer completed.
+- Slice 6 local evidence report completed.
 
 ## Local Development
 
@@ -44,12 +45,14 @@ python3 scripts/generate_synthetic_data.py
 python3 scripts/run_reconciliation.py
 python3 scripts/evaluate_reconciliation.py
 python3 scripts/score_reliability.py
+python3 scripts/generate_report.py
 ```
 
 ## Documentation
 
 - [Project Foundation](docs/plans/CROSSWISE_PROJECT_SYNTHESIS_AND_FOUNDATION_v1.0.md)
 - [Slice 0 Technical Contract](docs/plans/CROSSWISE_SLICE_0_TECHNICAL_CONTRACT_AND_SYSTEM_SPECIFICATION_v1.0.md)
+- [Local Evidence Report](docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
 
 ## Design Prototype
 

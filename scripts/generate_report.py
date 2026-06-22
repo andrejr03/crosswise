@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""Generate the local Crosswise evidence report."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_PATH = REPO_ROOT / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
+
+from crosswise.reporting import generate_local_evidence_report
+
+
+def main() -> int:
+    try:
+        output_path = generate_local_evidence_report(REPO_ROOT)
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    print(f"Output: {output_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
