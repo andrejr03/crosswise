@@ -30,6 +30,8 @@ Early Development
 - Project foundation completed.
 - Slice 0 technical contract completed.
 - Slice 1 synthetic data generation completed.
+- Slice 2 schema validation and normalization completed.
+- Slice 3 reconciliation baseline completed.
 
 ## Local Development
 
@@ -37,6 +39,7 @@ Early Development
 python3 -m pip install -e ".[dev]"
 python3 -m pytest
 python3 scripts/generate_synthetic_data.py
+python3 scripts/run_reconciliation.py
 ```
 
 ## Documentation

@@ -1,0 +1,696 @@
+{
+  "cases": [
+    {
+      "bundle_id": "bundle_clean_match_001",
+      "case_id": "case_bundle_clean_match_001",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "clean_match"
+      ],
+      "evidence": [],
+      "explanation": "All deterministic baseline checks passed for the bundle.",
+      "invoice_ids": [
+        "inv_001_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_001_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_001_001",
+          "receipt_line_id": "rcpt_line_001_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_001_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_001_002",
+          "receipt_line_id": "rcpt_line_001_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_001",
+      "purchase_order_id": "po_001",
+      "receipt_ids": [
+        "rcpt_001"
+      ],
+      "route": "auto_accept",
+      "severity": "none"
+    },
+    {
+      "bundle_id": "bundle_quantity_mismatch_002",
+      "case_id": "case_bundle_quantity_mismatch_002",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "quantity_mismatch"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_002",
+            "inv_002_a",
+            "rcpt_002"
+          ],
+          "affected_line_ids": [
+            "po_line_002_001",
+            "inv_line_002_main_001",
+            "rcpt_line_002_001"
+          ],
+          "compared_fields": [
+            "quantity_ordered",
+            "quantity_billed",
+            "quantity_received"
+          ],
+          "detection_basis": "ordered_billed_received_quantity_difference",
+          "explanation": "Ordered, billed, and received quantities are not identical.",
+          "label": "quantity_mismatch",
+          "normalized_values": {
+            "quantity_billed": "6",
+            "quantity_ordered": "5",
+            "quantity_received": "5"
+          },
+          "observed_values": {
+            "quantity_billed": "6",
+            "quantity_ordered": "5",
+            "quantity_received": "5"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_002_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_002_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "quantity_mismatch"
+          ],
+          "po_line_id": "po_line_002_001",
+          "receipt_line_id": "rcpt_line_002_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_002_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_002_002",
+          "receipt_line_id": "rcpt_line_002_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_002",
+      "purchase_order_id": "po_002",
+      "receipt_ids": [
+        "rcpt_002"
+      ],
+      "route": "needs_review",
+      "severity": "medium"
+    },
+    {
+      "bundle_id": "bundle_unit_price_mismatch_003",
+      "case_id": "case_bundle_unit_price_mismatch_003",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "unit_price_mismatch"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_003",
+            "inv_003_a",
+            "rcpt_003"
+          ],
+          "affected_line_ids": [
+            "po_line_003_001",
+            "inv_line_003_main_001"
+          ],
+          "compared_fields": [
+            "po_line.unit_price",
+            "invoice_line.unit_price"
+          ],
+          "detection_basis": "purchase_order_invoice_unit_price_difference",
+          "explanation": "Invoice unit price differs from purchase order unit price.",
+          "label": "unit_price_mismatch",
+          "normalized_values": {
+            "invoice_unit_price": "15.00",
+            "po_unit_price": "13.00"
+          },
+          "observed_values": {
+            "invoice_unit_price": "15.00",
+            "po_unit_price": "13.00"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_003_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_003_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "unit_price_mismatch"
+          ],
+          "po_line_id": "po_line_003_001",
+          "receipt_line_id": "rcpt_line_003_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_003_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_003_002",
+          "receipt_line_id": "rcpt_line_003_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_003",
+      "purchase_order_id": "po_003",
+      "receipt_ids": [
+        "rcpt_003"
+      ],
+      "route": "needs_review",
+      "severity": "medium"
+    },
+    {
+      "bundle_id": "bundle_missing_invoice_line_004",
+      "case_id": "case_bundle_missing_invoice_line_004",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "missing_invoice_line"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_004",
+            "inv_004_a",
+            "rcpt_004"
+          ],
+          "affected_line_ids": [
+            "po_line_004_002"
+          ],
+          "compared_fields": [
+            "po_line.sku_id",
+            "invoice_line.sku_id"
+          ],
+          "detection_basis": "no_invoice_line_for_po_sku",
+          "explanation": "No invoice line matched the purchase order line SKU.",
+          "label": "missing_invoice_line",
+          "normalized_values": {
+            "po_line_sku_id": "sku_004_b"
+          },
+          "observed_values": {
+            "invoice_line_id": null,
+            "po_line_sku_id": "sku_004_b"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_004_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_004_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_004_001",
+          "receipt_line_id": "rcpt_line_004_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": null,
+          "invoice_match_basis": "no_invoice_line_id_match",
+          "labels": [
+            "missing_invoice_line"
+          ],
+          "po_line_id": "po_line_004_002",
+          "receipt_line_id": "rcpt_line_004_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_004",
+      "purchase_order_id": "po_004",
+      "receipt_ids": [
+        "rcpt_004"
+      ],
+      "route": "needs_review",
+      "severity": "medium"
+    },
+    {
+      "bundle_id": "bundle_missing_receipt_line_005",
+      "case_id": "case_bundle_missing_receipt_line_005",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "missing_receipt_line"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_005",
+            "inv_005_a",
+            "rcpt_005"
+          ],
+          "affected_line_ids": [
+            "po_line_005_002",
+            "inv_line_005_main_002"
+          ],
+          "compared_fields": [
+            "po_line.sku_id",
+            "receipt_line.sku_id"
+          ],
+          "detection_basis": "no_receipt_line_for_po_sku",
+          "explanation": "No receipt line matched the purchase order line SKU.",
+          "label": "missing_receipt_line",
+          "normalized_values": {
+            "po_line_sku_id": "sku_005_b"
+          },
+          "observed_values": {
+            "po_line_sku_id": "sku_005_b",
+            "receipt_line_id": null
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_005_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_005_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_005_001",
+          "receipt_line_id": "rcpt_line_005_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_005_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "missing_receipt_line"
+          ],
+          "po_line_id": "po_line_005_002",
+          "receipt_line_id": null,
+          "receipt_match_basis": "no_receipt_line_id_match"
+        }
+      ],
+      "matched_supplier_id": "sup_005",
+      "purchase_order_id": "po_005",
+      "receipt_ids": [
+        "rcpt_005"
+      ],
+      "route": "needs_review",
+      "severity": "high"
+    },
+    {
+      "bundle_id": "bundle_duplicate_invoice_006",
+      "case_id": "case_bundle_duplicate_invoice_006",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "duplicate_invoice"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_006",
+            "inv_006_b",
+            "rcpt_006"
+          ],
+          "affected_line_ids": [],
+          "compared_fields": [
+            "invoice_number",
+            "supplier_id",
+            "invoice_date",
+            "total_amount"
+          ],
+          "detection_basis": "duplicate_invoice_number_supplier_date_total",
+          "explanation": "Invoice shares deterministic duplicate identifiers and totals with another invoice.",
+          "label": "duplicate_invoice",
+          "normalized_values": {
+            "duplicate_key": "sup_006|SYN-INV-0006|2026-01-16|203.00|203.00"
+          },
+          "observed_values": {
+            "duplicate_of_invoice_id": "inv_006_a",
+            "invoice_id": "inv_006_b",
+            "invoice_number": "SYN-INV-0006",
+            "original_invoice_id": "inv_006_a",
+            "total_amount": "203.00"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_006_a",
+        "inv_006_b"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_006_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_006_001",
+          "receipt_line_id": "rcpt_line_006_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_006_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_006_002",
+          "receipt_line_id": "rcpt_line_006_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_006",
+      "purchase_order_id": "po_006",
+      "receipt_ids": [
+        "rcpt_006"
+      ],
+      "route": "needs_review",
+      "severity": "high"
+    },
+    {
+      "bundle_id": "bundle_supplier_alias_mismatch_007",
+      "case_id": "case_bundle_supplier_alias_mismatch_007",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "supplier_alias_mismatch"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_007",
+            "inv_007_a",
+            "rcpt_007"
+          ],
+          "affected_line_ids": [],
+          "compared_fields": [
+            "supplier.canonical_name",
+            "invoice.supplier_name_raw"
+          ],
+          "detection_basis": "supplier_id_exact_with_known_alias",
+          "explanation": "Invoice supplier name is a known normalized alias of the canonical supplier.",
+          "label": "supplier_alias_mismatch",
+          "normalized_values": {
+            "canonical_name": "synthetic supplier 007",
+            "supplier_name_raw": "synth vendor 007"
+          },
+          "observed_values": {
+            "canonical_name": "Synthetic Supplier 007",
+            "supplier_name_raw": "Synth Vendor 007"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_007_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_007_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_007_001",
+          "receipt_line_id": "rcpt_line_007_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_007_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_007_002",
+          "receipt_line_id": "rcpt_line_007_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_007",
+      "purchase_order_id": "po_007",
+      "receipt_ids": [
+        "rcpt_007"
+      ],
+      "route": "needs_review",
+      "severity": "low"
+    },
+    {
+      "bundle_id": "bundle_late_receipt_008",
+      "case_id": "case_bundle_late_receipt_008",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "late_receipt"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_008",
+            "rcpt_008"
+          ],
+          "affected_line_ids": [],
+          "compared_fields": [
+            "purchase_order.expected_receipt_date",
+            "receipt.receipt_date"
+          ],
+          "detection_basis": "receipt_date_after_expected_receipt_date",
+          "explanation": "Receipt date is later than the purchase order expected receipt date.",
+          "label": "late_receipt",
+          "normalized_values": {
+            "expected_receipt_date": "2026-01-24",
+            "receipt_date": "2026-01-28"
+          },
+          "observed_values": {
+            "expected_receipt_date": "2026-01-24",
+            "receipt_date": "2026-01-28"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_008_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_008_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_008_001",
+          "receipt_line_id": "rcpt_line_008_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_008_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_008_002",
+          "receipt_line_id": "rcpt_line_008_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_008",
+      "purchase_order_id": "po_008",
+      "receipt_ids": [
+        "rcpt_008"
+      ],
+      "route": "needs_review",
+      "severity": "low"
+    },
+    {
+      "bundle_id": "bundle_low_confidence_extraction_009",
+      "case_id": "case_bundle_low_confidence_extraction_009",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "low_confidence_extraction"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_009",
+            "inv_009_a",
+            "rcpt_009"
+          ],
+          "affected_line_ids": [],
+          "compared_fields": [
+            "unit_price"
+          ],
+          "detection_basis": "simulated_extraction_issue_from_ground_truth",
+          "explanation": "Slice 3 carries through a fixture-encoded simulated extraction issue without confidence scoring.",
+          "label": "low_confidence_extraction",
+          "normalized_values": {
+            "expected_route": "needs_review",
+            "field_name": "unit_price",
+            "issue_type": "low_confidence_extraction",
+            "source_document_id": "inv_009_a"
+          },
+          "observed_values": {
+            "expected_route": "needs_review",
+            "field_name": "unit_price",
+            "issue_type": "low_confidence_extraction",
+            "source_document_id": "inv_009_a"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_009_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_009_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_009_001",
+          "receipt_line_id": "rcpt_line_009_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_009_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_009_002",
+          "receipt_line_id": "rcpt_line_009_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_009",
+      "purchase_order_id": "po_009",
+      "receipt_ids": [
+        "rcpt_009"
+      ],
+      "route": "needs_review",
+      "severity": "medium"
+    },
+    {
+      "bundle_id": "bundle_schema_validation_failure_010",
+      "case_id": "case_bundle_schema_validation_failure_010",
+      "confidence_note": "Slice 3 does not implement confidence scoring.",
+      "confidence_score": null,
+      "discrepancy_labels": [
+        "schema_validation_failure"
+      ],
+      "evidence": [
+        {
+          "affected_document_ids": [
+            "po_010",
+            "inv_010_a",
+            "rcpt_010"
+          ],
+          "affected_line_ids": [],
+          "compared_fields": [
+            "invoice_number"
+          ],
+          "detection_basis": "simulated_extraction_issue_from_ground_truth",
+          "explanation": "Slice 3 carries through a fixture-encoded simulated extraction issue without confidence scoring.",
+          "label": "schema_validation_failure",
+          "normalized_values": {
+            "expected_route": "blocked",
+            "field_name": "invoice_number",
+            "issue_type": "schema_validation_failure",
+            "source_document_id": "inv_010_a"
+          },
+          "observed_values": {
+            "expected_route": "blocked",
+            "field_name": "invoice_number",
+            "issue_type": "schema_validation_failure",
+            "source_document_id": "inv_010_a"
+          }
+        }
+      ],
+      "explanation": "Deterministic baseline reconciliation detected one or more reviewable discrepancies.",
+      "invoice_ids": [
+        "inv_010_a"
+      ],
+      "line_matches": [
+        {
+          "invoice_line_id": "inv_line_010_main_001",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_010_001",
+          "receipt_line_id": "rcpt_line_010_001",
+          "receipt_match_basis": "sku_id_exact"
+        },
+        {
+          "invoice_line_id": "inv_line_010_main_002",
+          "invoice_match_basis": "sku_id_exact",
+          "labels": [
+            "clean_match"
+          ],
+          "po_line_id": "po_line_010_002",
+          "receipt_line_id": "rcpt_line_010_002",
+          "receipt_match_basis": "sku_id_exact"
+        }
+      ],
+      "matched_supplier_id": "sup_010",
+      "purchase_order_id": "po_010",
+      "receipt_ids": [
+        "rcpt_010"
+      ],
+      "route": "blocked",
+      "severity": "high"
+    }
+  ],
+  "metadata": {
+    "confidence_scoring": "not_implemented",
+    "fixture_version": "v1.0",
+    "generator_version": "crosswise_synthetic_generator_v1",
+    "matching_strategy": "deterministic_sku_supplier_baseline",
+    "reconciliation_version": "slice_3_baseline_v1"
+  },
+  "summary": {
+    "bundles_reconciled": 10,
+    "detected_cases": 10,
+    "label_counts": {
+      "clean_match": 1,
+      "duplicate_invoice": 1,
+      "late_receipt": 1,
+      "low_confidence_extraction": 1,
+      "missing_invoice_line": 1,
+      "missing_receipt_line": 1,
+      "quantity_mismatch": 1,
+      "schema_validation_failure": 1,
+      "supplier_alias_mismatch": 1,
+      "unit_price_mismatch": 1
+    }
+  }
+}
