@@ -1,0 +1,135 @@
+{
+  "confusion": {
+    "clean_match": {
+      "clean_match": 1
+    },
+    "duplicate_invoice": {
+      "duplicate_invoice": 1
+    },
+    "late_receipt": {
+      "late_receipt": 1
+    },
+    "low_confidence_extraction": {
+      "low_confidence_extraction": 1
+    },
+    "missing_invoice_line": {
+      "missing_invoice_line": 1
+    },
+    "missing_receipt_line": {
+      "missing_receipt_line": 1
+    },
+    "quantity_mismatch": {
+      "quantity_mismatch": 1
+    },
+    "schema_validation_failure": {
+      "schema_validation_failure": 1
+    },
+    "supplier_alias_mismatch": {
+      "supplier_alias_mismatch": 1
+    },
+    "unit_price_mismatch": {
+      "unit_price_mismatch": 1
+    }
+  },
+  "false_negatives": [],
+  "false_positives": [],
+  "metadata": {
+    "confidence_calibration": "not_implemented",
+    "evaluation_version": "slice_4_evaluation_v1",
+    "fixture_version": "v1.0",
+    "reconciliation_version": "slice_3_baseline_v1"
+  },
+  "per_label_metrics": {
+    "clean_match": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "duplicate_invoice": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "late_receipt": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "low_confidence_extraction": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "missing_invoice_line": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "missing_receipt_line": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "quantity_mismatch": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "schema_validation_failure": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "supplier_alias_mismatch": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    },
+    "unit_price_mismatch": {
+      "f1": 1.0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "true_positives": 1
+    }
+  },
+  "summary": {
+    "bundles_evaluated": 10,
+    "cases_evaluated": 10,
+    "false_negatives": 0,
+    "false_positives": 0,
+    "macro_f1": 1.0,
+    "overall_f1": 1.0,
+    "overall_precision": 1.0,
+    "overall_recall": 1.0,
+    "true_positives": 10
+  }
+}

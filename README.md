@@ -32,6 +32,7 @@ Early Development
 - Slice 1 synthetic data generation completed.
 - Slice 2 schema validation and normalization completed.
 - Slice 3 reconciliation baseline completed.
+- Slice 4 evaluation harness completed.
 
 ## Local Development
 
@@ -40,6 +41,7 @@ python3 -m pip install -e ".[dev]"
 python3 -m pytest
 python3 scripts/generate_synthetic_data.py
 python3 scripts/run_reconciliation.py
+python3 scripts/evaluate_reconciliation.py
 ```
 
 ## Documentation
