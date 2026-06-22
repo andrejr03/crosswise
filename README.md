@@ -29,6 +29,15 @@ Early Development
 - Visual prototype completed.
 - Project foundation completed.
 - Slice 0 technical contract completed.
+- Slice 1 synthetic data generation completed.
+
+## Local Development
+
+```bash
+python3 -m pip install -e ".[dev]"
+python3 -m pytest
+python3 scripts/generate_synthetic_data.py
+```
 
 ## Documentation
 
