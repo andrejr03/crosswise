@@ -1,0 +1,679 @@
+{
+  "cases": [
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_clean_match_001",
+      "case_id": "case_bundle_clean_match_001",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "No non-clean discrepancy labels were detected.",
+          "impact": 0.03,
+          "name": "clean_case",
+          "value": true
+        }
+      ],
+      "confidence_score": 0.98,
+      "discrepancy_labels": [
+        "clean_match"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "auto_accept",
+      "reliability_route": "auto_accept",
+      "review_reason": "Deterministic clean match with complete line-level match evidence."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_quantity_mismatch_002",
+      "case_id": "case_bundle_quantity_mismatch_002",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.25,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "quantity_mismatch"
+            ],
+            "max_penalty": 0.25
+          }
+        }
+      ],
+      "confidence_score": 0.7,
+      "discrepancy_labels": [
+        "quantity_mismatch"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Ordered, billed, or received quantities differ."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_unit_price_mismatch_003",
+      "case_id": "case_bundle_unit_price_mismatch_003",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.25,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "unit_price_mismatch"
+            ],
+            "max_penalty": 0.25
+          }
+        }
+      ],
+      "confidence_score": 0.7,
+      "discrepancy_labels": [
+        "unit_price_mismatch"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Invoice unit price differs from purchase order unit price."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_missing_invoice_line_004",
+      "case_id": "case_bundle_missing_invoice_line_004",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.05,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 3,
+            "score": 0.75,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.25,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "missing_invoice_line"
+            ],
+            "max_penalty": 0.25
+          }
+        }
+      ],
+      "confidence_score": 0.65,
+      "discrepancy_labels": [
+        "missing_invoice_line"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Invoice evidence is incomplete for at least one purchase order line."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_missing_receipt_line_005",
+      "case_id": "case_bundle_missing_receipt_line_005",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.05,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 3,
+            "score": 0.75,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.3,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "missing_receipt_line"
+            ],
+            "max_penalty": 0.3
+          }
+        }
+      ],
+      "confidence_score": 0.6,
+      "discrepancy_labels": [
+        "missing_receipt_line"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Receipt evidence is incomplete for at least one purchase order line."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_duplicate_invoice_006",
+      "case_id": "case_bundle_duplicate_invoice_006",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.3,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "duplicate_invoice"
+            ],
+            "max_penalty": 0.3
+          }
+        }
+      ],
+      "confidence_score": 0.65,
+      "discrepancy_labels": [
+        "duplicate_invoice"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Possible duplicate invoice requires human review before any downstream workflow."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_supplier_alias_mismatch_007",
+      "case_id": "case_bundle_supplier_alias_mismatch_007",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.12,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "supplier_alias_mismatch"
+            ],
+            "max_penalty": 0.12
+          }
+        }
+      ],
+      "confidence_score": 0.83,
+      "discrepancy_labels": [
+        "supplier_alias_mismatch"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Supplier alias requires review even when deterministic alias evidence exists."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_late_receipt_008",
+      "case_id": "case_bundle_late_receipt_008",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.12,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "late_receipt"
+            ],
+            "max_penalty": 0.12
+          }
+        }
+      ],
+      "confidence_score": 0.83,
+      "discrepancy_labels": [
+        "late_receipt"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Receipt timing differs from the purchase order expectation."
+    },
+    {
+      "blocked_reason": null,
+      "bundle_id": "bundle_low_confidence_extraction_009",
+      "case_id": "case_bundle_low_confidence_extraction_009",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.35,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "low_confidence_extraction"
+            ],
+            "max_penalty": 0.35
+          }
+        },
+        {
+          "explanation": "The fixture explicitly encodes an extraction issue; no model confidence is inferred.",
+          "impact": -0.05,
+          "name": "simulated_extraction_issue",
+          "value": "low_confidence_extraction"
+        }
+      ],
+      "confidence_score": 0.55,
+      "discrepancy_labels": [
+        "low_confidence_extraction"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "needs_review",
+      "reliability_route": "needs_review",
+      "review_reason": "Fixture encodes a simulated extraction reliability issue."
+    },
+    {
+      "blocked_reason": "schema_validation_failure",
+      "bundle_id": "bundle_schema_validation_failure_010",
+      "case_id": "case_bundle_schema_validation_failure_010",
+      "confidence_factors": [
+        {
+          "explanation": "Slice 5 does not use model calls or model-reported confidence.",
+          "impact": 0.0,
+          "name": "model_self_reported_confidence",
+          "value": "not_used"
+        },
+        {
+          "explanation": "Clean cases require complete deterministic line matches; non-clean labels require structured evidence.",
+          "impact": 0.0,
+          "name": "evidence_completeness",
+          "value": {
+            "complete": true,
+            "missing_labels": [],
+            "ratio": 1.0
+          }
+        },
+        {
+          "explanation": "Exact SKU line matches support reliability; missing or weaker match bases reduce it.",
+          "impact": -0.0,
+          "name": "deterministic_match_quality",
+          "value": {
+            "exact_matches": 4,
+            "score": 1.0,
+            "total_match_slots": 4
+          }
+        },
+        {
+          "explanation": "Existing Slice 4 per-label F1 is used only as deterministic support when available.",
+          "impact": -0.0,
+          "name": "evaluation_support",
+          "value": {
+            "available": true,
+            "average_label_f1": 1.0
+          }
+        },
+        {
+          "explanation": "Reviewable or blocked discrepancy labels reduce reliability confidence.",
+          "impact": -0.7,
+          "name": "discrepancy_severity",
+          "value": {
+            "labels": [
+              "schema_validation_failure"
+            ],
+            "max_penalty": 0.7
+          }
+        }
+      ],
+      "confidence_score": 0.25,
+      "discrepancy_labels": [
+        "schema_validation_failure"
+      ],
+      "evidence_completeness": {
+        "complete": true,
+        "missing_labels": [],
+        "ratio": 1.0
+      },
+      "non_advice_reminder": "Crosswise output is synthetic-only reconciliation support and is not accounting, tax, legal, financial, payment, compliance, or autonomous approval advice.",
+      "original_route": "blocked",
+      "reliability_route": "blocked",
+      "review_reason": "Schema validation failure prevents reliable automated handling."
+    }
+  ],
+  "metadata": {
+    "confidence_basis": "deterministic_evidence_validation_reconciliation_and_optional_evaluation_support",
+    "evaluation_version": "slice_4_evaluation_v1",
+    "model_self_reported_confidence": "not_used",
+    "reconciliation_version": "slice_3_baseline_v1",
+    "reliability_version": "slice_5_reliability_v1"
+  },
+  "summary": {
+    "auto_accept": 1,
+    "average_confidence": 0.674,
+    "blocked": 1,
+    "cases_scored": 10,
+    "needs_review": 8
+  }
+}
