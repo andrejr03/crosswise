@@ -31,7 +31,7 @@ The current implementation is deterministic and synthetic-data-only. It is built
 
 ## Current Status
 
-Early Development
+Completed local portfolio demo
 
 - Visual prototype completed.
 - Project foundation completed.
@@ -46,6 +46,7 @@ Early Development
 - Slice 8 README demo polish and fresh-clone reproduction path completed.
 - Slice 9 document-panel reviewer completed.
 - Slice 10 interactive reviewer (offline, self-contained case explorer) completed.
+- Synthetic document pack completed.
 
 ## Fresh-Clone Quickstart
 
@@ -88,6 +89,10 @@ python3 scripts/run_full_pipeline.py
 - `docs/evidence/crosswise_reviewer_v1_0.html` — self-contained static HTML reviewer interface.
 - `docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png` — generated screenshot of the document-panel discrepancy view.
 - `docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png` — generated screenshot of the interactive case explorer on a selected discrepancy case.
+- `docs/evidence/documents/invoice.html` — standalone synthetic invoice source-record render.
+- `docs/evidence/documents/purchase_order.html` — standalone synthetic purchase order source-record render.
+- `docs/evidence/documents/receipt.html` — standalone synthetic receipt source-record render.
+- `docs/evidence/CROSSWISE_DOCUMENT_PACK_SHOWCASE.png` — generated screenshot of the synthetic document pack.
 
 ## Open the Static Reviewer
 
@@ -135,6 +140,10 @@ python3 scripts/generate_reviewer.py
 - [Static Reviewer HTML](docs/evidence/crosswise_reviewer_v1_0.html)
 - [Reviewer Discrepancy Showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
 - [Reviewer Interactive Showcase](docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
+- [Synthetic Invoice Render](docs/evidence/documents/invoice.html)
+- [Synthetic Purchase Order Render](docs/evidence/documents/purchase_order.html)
+- [Synthetic Receipt Render](docs/evidence/documents/receipt.html)
+- [Synthetic Document Pack Showcase](docs/evidence/CROSSWISE_DOCUMENT_PACK_SHOWCASE.png)
 
 ## Design Prototype
 

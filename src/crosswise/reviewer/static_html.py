@@ -163,11 +163,12 @@ body {
   padding: 54px 0 58px;
 }
 
+#interactive-case-explorer {
+  padding: 48px 16px 0 44px;
+}
+
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
-  align-items: start;
+  position: relative;
   padding: 26px 0 46px;
 }
 
@@ -201,6 +202,9 @@ h1 {
 }
 
 .hero-note {
+  position: absolute;
+  top: 0;
+  right: 28px;
   color: var(--muted);
   font-family: Menlo, Consolas, monospace;
   font-size: 12px;
@@ -1129,7 +1133,13 @@ code {
     padding: 32px 22px 28px;
   }
 
+  #interactive-case-explorer {
+    padding: 30px 24px 0;
+  }
+
   .hero-note {
+    position: static;
+    margin-top: 22px;
     text-align: left;
   }
 
@@ -1263,7 +1273,7 @@ def _example_card(title: str, case: dict[str, Any], reliability: dict[str, Any])
         <p class="bundle">{_e(case["bundle_id"])}</p>
         <div class="pills">
           <span class="pill route-{_class_token(route)}">{_e(route)}</span>
-          <span class="pill">{_e(_format_metric(reliability.get("confidence_score")))}</span>
+          <span class="pill">{_e(_format_confidence(reliability.get("confidence_score")))}</span>
         </div>
         <div class="pills">{labels}</div>
         <p class="explain">{_e(case.get("explanation", "Not available"))}</p>
@@ -1370,9 +1380,9 @@ def _hero_core(
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">{_e(_format_metric(confidence))}<span>{_e(_confidence_note(route))}</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">{_e(_format_confidence(confidence))}<span>{_e(_confidence_note(route))}</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: {confidence_pct}%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1683,7 +1693,7 @@ def _document_story(
             </div>
             <div class="pills">
               <span class="pill route-{_class_token(route)}">{_e(route)}</span>
-              <span class="pill">{_e(_format_metric(reliability.get("confidence_score")))}</span>
+              <span class="pill">{_e(_format_confidence(reliability.get("confidence_score")))}</span>
             </div>
           </div>
           <div class="document-grid">
@@ -1901,7 +1911,7 @@ def _explanation_block(case: dict[str, Any], reliability: dict[str, Any]) -> str
             <div class="pills">
               {_label_pills(labels)}
               <span class="pill route-{_class_token(route)}">{_e(route)}</span>
-              <span class="pill">confidence {_e(_format_metric(reliability.get("confidence_score")))}</span>
+              <span class="pill">confidence {_e(_format_confidence(reliability.get("confidence_score")))}</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>{_e(_story_title(labels))}</p>
@@ -1920,7 +1930,7 @@ def _case_row(case: dict[str, Any], reliability: dict[str, Any]) -> str:
               <td>{_e(case["bundle_id"])}</td>
               <td>{_label_pills(case.get("discrepancy_labels", []))}</td>
               <td><span class="pill route-{_class_token(route)}">{_e(route)}</span></td>
-              <td>{_e(_format_metric(reliability.get("confidence_score")))}</td>
+              <td>{_e(_format_confidence(reliability.get("confidence_score")))}</td>
               <td>{_e(case.get("explanation", "Not available"))}</td>
             </tr>
 """.rstrip()
@@ -2189,6 +2199,12 @@ def _format_metric(value: Any) -> str:
         return f"{value:.3f}"
     if isinstance(value, int):
         return str(value)
+    return "Not available"
+
+
+def _format_confidence(value: Any) -> str:
+    if isinstance(value, (float, int)):
+        return f"{float(value):.2f}"
     return "Not available"
 
 

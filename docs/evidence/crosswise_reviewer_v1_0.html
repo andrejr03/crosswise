@@ -43,11 +43,12 @@ body {
   padding: 54px 0 58px;
 }
 
+#interactive-case-explorer {
+  padding: 48px 16px 0 44px;
+}
+
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
-  align-items: start;
+  position: relative;
   padding: 26px 0 46px;
 }
 
@@ -81,6 +82,9 @@ h1 {
 }
 
 .hero-note {
+  position: absolute;
+  top: 0;
+  right: 28px;
   color: var(--muted);
   font-family: Menlo, Consolas, monospace;
   font-size: 12px;
@@ -1009,7 +1013,13 @@ code {
     padding: 32px 22px 28px;
   }
 
+  #interactive-case-explorer {
+    padding: 30px 24px 0;
+  }
+
   .hero-note {
+    position: static;
+    margin-top: 22px;
     text-align: left;
   }
 
@@ -1116,9 +1126,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.980<span>above threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.98<span>above threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 98%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1193,9 +1203,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.650<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.65<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 65%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1270,9 +1280,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.830<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.83<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 83%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1347,9 +1357,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.550<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.55<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 55%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1400,9 +1410,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.650<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.65<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 65%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1477,9 +1487,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.600<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.60<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 60%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1554,9 +1564,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.700<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.70<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 70%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1631,9 +1641,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.250<span>blocked route</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.25<span>blocked route</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 25%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1708,9 +1718,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.830<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.83<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 83%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1785,9 +1795,9 @@ code {
       </div>
 
       <div class="rev-decision">
-        <section class="hero-confidence" aria-label="Model confidence">
-          <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">0.700<span>below threshold</span></div>
+        <section class="hero-confidence" aria-label="Case confidence">
+          <div class="condensed-label">Case confidence</div>
+          <div class="confidence-number">0.70<span>below threshold</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: 70%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
@@ -1845,7 +1855,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-auto_accept">auto_accept</span>
-              <span class="pill">0.980</span>
+              <span class="pill">0.98</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2002,7 +2012,7 @@ code {
             <div class="pills">
               <span class="pill">clean_match</span>
               <span class="pill route-auto_accept">auto_accept</span>
-              <span class="pill">confidence 0.980</span>
+              <span class="pill">confidence 0.98</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Clean match across PO, invoice, and receipt</p>
@@ -2024,7 +2034,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.650</span>
+              <span class="pill">0.65</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2227,7 +2237,7 @@ code {
             <div class="pills">
               <span class="pill">duplicate_invoice</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.650</span>
+              <span class="pill">confidence 0.65</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Duplicate Invoice</p>
@@ -2249,7 +2259,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.830</span>
+              <span class="pill">0.83</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2406,7 +2416,7 @@ code {
             <div class="pills">
               <span class="pill">late_receipt</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.830</span>
+              <span class="pill">confidence 0.83</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Late Receipt</p>
@@ -2428,7 +2438,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.550</span>
+              <span class="pill">0.55</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2585,7 +2595,7 @@ code {
             <div class="pills">
               <span class="pill">low_confidence_extraction</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.550</span>
+              <span class="pill">confidence 0.55</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Low Confidence Extraction</p>
@@ -2607,7 +2617,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.650</span>
+              <span class="pill">0.65</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2757,7 +2767,7 @@ code {
             <div class="pills">
               <span class="pill">missing_invoice_line</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.650</span>
+              <span class="pill">confidence 0.65</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Missing Invoice Line</p>
@@ -2779,7 +2789,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.600</span>
+              <span class="pill">0.60</span>
             </div>
           </div>
           <div class="document-grid">
@@ -2929,7 +2939,7 @@ code {
             <div class="pills">
               <span class="pill">missing_receipt_line</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.600</span>
+              <span class="pill">confidence 0.60</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Missing Receipt Line</p>
@@ -2951,7 +2961,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.700</span>
+              <span class="pill">0.70</span>
             </div>
           </div>
           <div class="document-grid">
@@ -3108,7 +3118,7 @@ code {
             <div class="pills">
               <span class="pill">quantity_mismatch</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.700</span>
+              <span class="pill">confidence 0.70</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Quantity Mismatch</p>
@@ -3130,7 +3140,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-blocked">blocked</span>
-              <span class="pill">0.250</span>
+              <span class="pill">0.25</span>
             </div>
           </div>
           <div class="document-grid">
@@ -3287,7 +3297,7 @@ code {
             <div class="pills">
               <span class="pill">schema_validation_failure</span>
               <span class="pill route-blocked">blocked</span>
-              <span class="pill">confidence 0.250</span>
+              <span class="pill">confidence 0.25</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Schema Validation Failure</p>
@@ -3309,7 +3319,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.830</span>
+              <span class="pill">0.83</span>
             </div>
           </div>
           <div class="document-grid">
@@ -3466,7 +3476,7 @@ code {
             <div class="pills">
               <span class="pill">supplier_alias_mismatch</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.830</span>
+              <span class="pill">confidence 0.83</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Supplier Alias Mismatch</p>
@@ -3488,7 +3498,7 @@ code {
             </div>
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">0.700</span>
+              <span class="pill">0.70</span>
             </div>
           </div>
           <div class="document-grid">
@@ -3645,7 +3655,7 @@ code {
             <div class="pills">
               <span class="pill">unit_price_mismatch</span>
               <span class="pill route-needs_review">needs_review</span>
-              <span class="pill">confidence 0.700</span>
+              <span class="pill">confidence 0.70</span>
             </div>
             <div class="explanation-grid">
               <p class="answer"><strong>What happened?</strong>Unit Price Mismatch</p>

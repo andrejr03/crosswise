@@ -194,7 +194,7 @@ def test_reviewer_interactive_panels_match_source_outputs() -> None:
     for bundle_id, reliability in reliability_cases.items():
         panel = _detail_slice(html, bundle_id)
         route = reliability["reliability_route"]
-        confidence = f"{reliability['confidence_score']:.3f}"
+        confidence = f"{reliability['confidence_score']:.2f}"
         assert route in panel, f"route {route} missing for {bundle_id}"
         assert confidence in panel, f"confidence {confidence} missing for {bundle_id}"
 
