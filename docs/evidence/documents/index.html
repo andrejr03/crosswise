@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Crosswise Synthetic Purchase Order - po_003</title>
+  <title>Crosswise Synthetic Document Pack</title>
   <style>:root {
   --page: #171511;
   --paper: #eee8dd;
@@ -407,89 +407,36 @@ a {
 }</style>
 </head>
 <body>
-  <main class="document-page">
+  <main class="document-page pack-index">
     <header class="masthead">
       <div>
-        <div class="kicker">Crosswise synthetic source record</div>
-        <h1>Purchase Order</h1>
+        <div class="kicker">Crosswise synthetic document pack</div>
+        <h1>Document Pack</h1>
       </div>
       <div class="brand-mark" aria-hidden="true"></div>
     </header>
-        <nav class="document-nav" aria-label="Document pack navigation">
-      <a href="index.html">Pack index</a>
-      <a href="invoice.html">Invoice</a>
-      <span aria-current="page">Purchase order</span>
-      <a href="receipt.html">Receipt</a>
-      <a href="../crosswise_reviewer_v1_0.html">Reviewer</a>
-    </nav>
-    <section class="identity-strip" aria-label="Document identity">
+    <section class="identity-strip" aria-label="Document pack identity">
       <div>
-        <span class="label">Document ID</span>
-        <strong>po_003</strong>
+        <span class="label">Source bundle</span>
+        <strong>bundle_unit_price_mismatch_003</strong>
       </div>
       <div>
-        <span class="label">Record note</span>
-        <strong>Generated source record render</strong>
+        <span class="label">Records</span>
+        <strong>SYN-INV-0003 &middot; po_003 &middot; SYN-RCPT-0003</strong>
       </div>
     </section>
-        <section class="meta-grid" aria-label="Document metadata">
-      <div class="meta-card">
-        <span>Purchase order</span>
-        <strong>po_003</strong>
-      </div>
-      <div class="meta-card">
-        <span>Issue date</span>
-        <strong>2026-01-12</strong>
-      </div>
-      <div class="meta-card">
-        <span>Expected receipt</span>
-        <strong>2026-01-19</strong>
-      </div>
-      <div class="meta-card">
-        <span>Status</span>
-        <strong>issued</strong>
-      </div>
-      <div class="meta-card">
-        <span>Currency</span>
-        <strong>EUR</strong>
-      </div>
+    <section class="pack-intro" aria-label="Pack summary">
+      <p>These source-record renders show a synthetic transaction between Synthetic Supplier 003 GmbH and Crosswise Demo Buyer GmbH.</p>
     </section>
-        <section class="party-grid" aria-label="Document parties">
-      <article class="party-card">
-        <span class="label">Buyer / orderer</span>
-        <h2>Crosswise Demo Buyer GmbH</h2>
-        <p>SYN Buyer House 001, 00000 Synthetic City, DE</p>
-        <p><span>VAT ID</span> DE-SYN-000000000</p>
-        <p><span>Contact</span> ap@crosswise-demo.synthetic</p>
-      </article>
-      <article class="party-card">
-        <span class="label">Supplier / seller</span>
-        <h2>Synthetic Supplier 003 GmbH</h2>
-        <p>SYN Supplier Campus 003, 000003 Synthetic City, DE</p>
-        <p><span>VAT ID</span> DE-SYN-000000003</p>
-        <p><span>Contact</span> accounts@supplier-003.synthetic</p>
-      </article>
+    <section class="pack-links" aria-label="Pack contents">
+      <a class="pack-link" href="invoice.html"><span>Invoice - <code>SYN-INV-0003</code></span><strong>Synthetic invoice source-record render</strong></a>
+      <a class="pack-link" href="purchase_order.html"><span>Purchase Order - <code>po_003</code></span><strong>Synthetic purchase order source-record render</strong></a>
+      <a class="pack-link" href="receipt.html"><span>Goods Receipt - <code>SYN-RCPT-0003</code></span><strong>Synthetic receipt source-record render</strong></a>
     </section>
-    <section class="lines-section" aria-label="Line items">
-      <div class="section-rule">
-        <span>Line items</span>
-      </div>
-            <table class="line-table">
-        <thead><tr><th>Line</th><th>Description</th><th>Qty ordered</th><th>Unit</th><th>Unit price</th><th>Line total</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>Synthetic Item 003 Alpha</td><td>5</td><td>each</td><td><span class="money"><span>EUR</span> 13.00</span></td><td><span class="money"><span>EUR</span> 65.00</span></td></tr>
-          <tr><td>2</td><td>Synthetic Item 003 Beta</td><td>4</td><td>each</td><td><span class="money"><span>EUR</span> 26.00</span></td><td><span class="money"><span>EUR</span> 104.00</span></td></tr>
-        </tbody>
-      </table>
-    </section>
-        <section class="totals-block" aria-label="Document totals">
-      <div class="total-row"><span>Subtotal</span><strong><span class="money"><span>EUR</span> 169.00</span></strong></div>
-      <div class="total-row"><span>Tax amount</span><strong><span class="money"><span>EUR</span> 0.00</span></strong></div>
-      <div class="total-row"><span>Total</span><strong><span class="money"><span>EUR</span> 169.00</span></strong></div>
-    </section>
+    <p class="reviewer-link"><a href="../crosswise_reviewer_v1_0.html">Open the Crosswise reviewer</a></p>
     <footer class="caption">
       <strong>Synthetic document notice</strong>
-      <p>This is a synthetic, illustrative render of a generated Crosswise source record. It is not a real document and contains no real company, supplier, payment, tax, or bank data. It is not parsed, ingested, or read back by Crosswise; there is no OCR. Crosswise output is not accounting, tax, legal, financial, payment, or compliance advice.</p>
+      <p>These are synthetic, illustrative renders of generated Crosswise source records. They are not real documents and contain no real company, supplier, payment, tax, or bank data. They are not parsed, ingested, or read back by Crosswise; there is no OCR. Crosswise output is not accounting, tax, legal, financial, payment, or compliance advice.</p>
     </footer>
   </main>
 </body>

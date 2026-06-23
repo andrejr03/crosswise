@@ -14,6 +14,7 @@
 - [Static Reviewer HTML](crosswise_reviewer_v1_0.html)
 - [Reviewer Discrepancy Showcase](CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
 - [Reviewer Interactive Showcase](CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
+- [Synthetic Document Pack Index](documents/index.html)
 - [Synthetic Invoice Render](documents/invoice.html)
 - [Synthetic Purchase Order Render](documents/purchase_order.html)
 - [Synthetic Receipt Render](documents/receipt.html)

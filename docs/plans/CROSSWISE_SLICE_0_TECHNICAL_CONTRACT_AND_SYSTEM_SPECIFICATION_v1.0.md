@@ -30,7 +30,7 @@ Crosswise is an AI document-reconciliation project that transforms synthetic bus
 
 The first vertical is invoice / purchase order / receipt reconciliation for synthetic procurement-style document bundles. Each bundle represents one intended commercial transaction or related transaction group containing supplier records, SKU records, one purchase order, one invoice, one receipt, their line items, generated ground truth, and one or more discrepancy labels.
 
-The core recruiter-facing thesis is: Crosswise demonstrates a junior AI/data product that does not merely "use AI on documents"; it proves reliability field by field, reconciles operational records line by line, exposes evidence for every flagged case, and keeps uncertain or risky outcomes in a human-review workflow. The strongest portfolio signal is the combination of operational usefulness, typed data modeling, measurable evaluation, and honest scope control.
+The core public thesis is: Crosswise demonstrates an AI/data product that does not merely "use AI on documents"; it proves reliability field by field, reconciles operational records line by line, exposes evidence for every flagged case, and keeps uncertain or risky outcomes in a human-review workflow. The strongest technical signal is the combination of operational usefulness, typed data modeling, measurable evaluation, and honest scope control.
 
 Crosswise is not:
 
@@ -59,7 +59,7 @@ Slice 0 includes only this technical contract and system specification. It defin
 - evaluation metric definitions;
 - offline fixture and testing expectations;
 - future repository architecture expectations;
-- future recruiter demo target.
+- future public demo target.
 
 ### Out of Scope for Slice 0
 
@@ -885,7 +885,7 @@ Examples:
 
 ## 9. Evaluation Metrics Contract
 
-Evaluation must measure both extraction quality and reconciliation quality using synthetic ground truth. Metrics must be reproducible offline and interpretable by a recruiter or technical reviewer.
+Evaluation must measure both extraction quality and reconciliation quality using synthetic ground truth. Metrics must be reproducible offline and interpretable by a technical reviewer.
 
 | Metric | Measures | Why it matters |
 |---|---|---|
@@ -898,7 +898,7 @@ Evaluation must measure both extraction quality and reconciliation quality using
 | discrepancy recall by type | For each discrepancy label, detected true positives divided by all ground-truth cases of that type. | Measures missed exception risk per discrepancy category. |
 | macro-F1 | Average F1 score across discrepancy types with equal label weighting. | Prevents common easy labels from hiding weak performance on rarer labels. |
 | confusion matrix | Matrix of ground-truth labels versus detected labels. | Shows which discrepancy types are confused with each other. |
-| false-positive examples | Concrete synthetic cases incorrectly flagged. | Makes limitations visible and improves recruiter trust. |
+| false-positive examples | Concrete synthetic cases incorrectly flagged. | Makes limitations visible and improves trust. |
 | false-negative examples | Concrete synthetic cases missed by reconciliation. | Shows honest failure analysis and safety awareness. |
 | review-routing precision | Percentage of cases routed to review or blocked that truly required review/blocking under ground truth. | Measures whether the review queue is useful instead of noisy. |
 | fresh-clone reproducibility check | Whether a clean checkout can regenerate or evaluate fixtures offline and produce expected outputs. | Proves the project is inspectable and not dependent on hidden state or live services. |
@@ -1001,7 +1001,6 @@ Expected future structure:
 | `assets/prototypes/` | Preserved visual prototypes, including `crosswise-prototype.zip`. |
 | `docs/plans/` | Planning, contracts, and implementation plans. |
 | `docs/evidence/` | Checked-in evaluation reports, metric snapshots, failure examples, demo evidence. |
-| `docs/reviews/` | Human review notes, self-review, recruiter-oriented critique, limitation analysis. |
 | `data/synthetic/` | Generated or checked-in synthetic document data. |
 | `data/ground_truth/` | Ground truth records and labels for evaluation. |
 | `fixtures/extractions/` | Recorded extraction outputs for offline tests. |
@@ -1031,9 +1030,9 @@ Architecture rules:
 - The review UI, if added later, must consume the same reconciliation outputs used by tests and reports.
 - The prototype ZIP remains an asset, not a source of executable logic.
 
-## 12. Recruiter Demo Target
+## 12. Public Demo Target
 
-The future recruiter demo target is a short, reproducible path that shows Crosswise as a working data product. This is not Slice 0 implementation.
+The future public demo target is a short, reproducible path that shows Crosswise as a working data product. This is not Slice 0 implementation.
 
 Target future demo flow:
 
@@ -1056,7 +1055,7 @@ The target demo should show:
 - field-level and discrepancy-level metrics;
 - explicit synthetic-only and non-advice statements.
 
-The first 2-3 minutes should make the recruiter signal obvious: Crosswise is a finished, bounded, reproducible AI/data reconciliation project with measurable reliability and honest human-review limits.
+The first 2-3 minutes should make the technical signal obvious: Crosswise is a finished, bounded, reproducible AI/data reconciliation project with measurable reliability and honest human-review limits.
 
 ## 13. Acceptance Criteria for Slice 0
 
@@ -1067,7 +1066,7 @@ Slice 0 is accepted when this document:
 - fixes Crosswise name and direction;
 - states that it supersedes earlier project-selection material;
 - preserves the existence of `assets/prototypes/crosswise-prototype.zip` without extracting or modifying it;
-- defines Crosswise, first vertical, recruiter thesis, and non-product boundaries;
+- defines Crosswise, first vertical, public thesis, and non-product boundaries;
 - defines in-scope, out-of-scope, deferred, and prohibited Slice 0 items;
 - includes all hard Slice 0 exclusions;
 - defines the synthetic data contract with deterministic seed and no-real-entities policy;
@@ -1078,7 +1077,7 @@ Slice 0 is accepted when this document:
 - defines all required evaluation metrics and why they matter;
 - defines fixture and offline testing expectations with no live API calls in tests/CI;
 - proposes future repository architecture without creating implementation files or folders;
-- defines the future recruiter demo target as future work, not Slice 0 implementation;
+- defines the future public demo target as future work, not Slice 0 implementation;
 - defines inputs to Slice 1;
 - includes fixed non-advice and data policy language;
 - modifies no files other than this target document.

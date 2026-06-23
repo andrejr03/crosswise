@@ -1,13 +1,11 @@
 # Crosswise — Slice 10B Implementation Plan (v1.0)
 
 > Execution plan that translates the **already-approved** UX architecture
-> (`docs/plans/CROSSWISE_SLICE_10B_INTERACTIVE_REVIEWER_UX_PLAN_v1.0.md`, "Hero Case + Quiet
-> Index") into precise implementation steps. This is not a review, not a redesign, and not an
-> implementation — it creates only this file. The UX decision is fixed and is not reopened.
-> All Slice 10 scope boundaries from `docs/reviews/CROSSWISE_DEMONSTRATION_LAYER_ARCHITECTURE_REVIEW_v1.0.md`
-> remain in force: vanilla inline JS/CSS, one self-contained offline HTML file, no framework,
-> no network request, no new reconciliation/evaluation/reliability/routing logic, same embedded
-> data. AGENTS.md git/commit/scope policies apply.
+> ("Hero Case + Quiet Index") into precise implementation steps. This is not a review, not a
+> redesign, and not an implementation — it creates only this file. The UX decision is fixed and
+> is not reopened. All Slice 10 scope boundaries remain in force: vanilla inline JS/CSS, one
+> self-contained offline HTML file, no framework, no network request, no new
+> reconciliation/evaluation/reliability/routing logic, same embedded data.
 
 ---
 
@@ -90,7 +88,7 @@ Must remain untouched (no logic, data, or contract changes):
   `_format_metric`, `_e`, and the money/number helpers. Selection/layout may change; **the
   values these compute from source must not**.
 - `assets/prototypes/crosswise-prototype.zip` (preserved artifact — never regenerate/overwrite).
-- README.md and AGENTS.md (out of scope for this slice unless separately authorized).
+- README.md (out of scope for this slice unless separately authorized).
 - All non-reviewer tests.
 
 ---
@@ -396,10 +394,10 @@ render; reviewer opens by double-click and is legible with JS disabled.
 - Deployment, authentication, databases, persisted reviewer state.
 - Any change to reconciliation, evaluation, confidence, reliability, routing, or generation
   **logic**, or to generated data/metrics/routes/evidence.
-- README.md / AGENTS.md edits (separate authorization required).
+- README.md edits (separate authorization required).
 - Regenerating or overwriting `assets/prototypes/crosswise-prototype.zip`.
 - Adding cases, changing the taxonomy, or reopening the approved UX decision.
-- Any git branch/remote/commit/push/tag operation (AGENTS.md policy).
+- Any git branch/remote/commit/push/tag operation.
 
 ---
 

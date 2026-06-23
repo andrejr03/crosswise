@@ -58,17 +58,11 @@ def test_reviewer_script_runs_and_creates_output() -> None:
         capture_output=True,
     )
     output_path = repo_root / "docs" / "evidence" / "crosswise_reviewer_v1_0.html"
-    screenshot_path = repo_root / "docs" / "evidence" / "CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png"
-    interactive_screenshot_path = (
-        repo_root / "docs" / "evidence" / "CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png"
-    )
 
     assert "Output:" in completed.stdout
-    assert "Screenshot:" in completed.stdout
-    assert "Interactive screenshot:" in completed.stdout
+    assert "Screenshot:" not in completed.stdout
+    assert "Interactive screenshot:" not in completed.stdout
     assert output_path.is_file()
-    assert screenshot_path.is_file()
-    assert interactive_screenshot_path.is_file()
 
 
 def test_reviewer_html_contains_required_notices() -> None:
@@ -289,6 +283,12 @@ def test_reviewer_html_contains_reproduction_commands() -> None:
     assert "python3 scripts/generate_report.py" in html
     assert "python3 scripts/generate_reviewer.py" in html
     assert "python3 -m pytest" in html
+
+
+def test_reviewer_links_to_synthetic_document_pack() -> None:
+    html = render_static_reviewer(_payloads())
+
+    assert 'href="documents/index.html"' in html
 
 
 def test_reviewer_html_has_no_external_urls() -> None:

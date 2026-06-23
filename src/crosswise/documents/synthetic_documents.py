@@ -8,16 +8,30 @@ from __future__ import annotations
 
 import html
 import json
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 REQUIRED_FIXTURE_PATH = Path("data/synthetic/fixtures_v1_0.json")
 DOCUMENTS_OUTPUT_DIR = Path("docs/evidence/documents")
+DOCUMENT_INDEX_OUTPUT_PATH = DOCUMENTS_OUTPUT_DIR / "index.html"
 INVOICE_OUTPUT_PATH = DOCUMENTS_OUTPUT_DIR / "invoice.html"
 PURCHASE_ORDER_OUTPUT_PATH = DOCUMENTS_OUTPUT_DIR / "purchase_order.html"
 RECEIPT_OUTPUT_PATH = DOCUMENTS_OUTPUT_DIR / "receipt.html"
 DOCUMENT_PACK_SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_DOCUMENT_PACK_SHOWCASE.png")
+DOCUMENT_PACK_INDEX_SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_DOCUMENT_PACK_INDEX_SHOWCASE.png")
+DOCUMENT_PACK_INVOICE_SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_DOCUMENT_PACK_INVOICE_SHOWCASE.png")
+DOCUMENT_PACK_PURCHASE_ORDER_SCREENSHOT_OUTPUT_PATH = Path(
+    "docs/evidence/CROSSWISE_DOCUMENT_PACK_PURCHASE_ORDER_SHOWCASE.png"
+)
+DOCUMENT_PACK_RECEIPT_SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_DOCUMENT_PACK_RECEIPT_SHOWCASE.png")
 REPRESENTATIVE_BUNDLE_ID = "bundle_unit_price_mismatch_003"
+BUYER_IDENTITY = {
+    "name": "Crosswise Demo Buyer GmbH",
+    "address": "SYN Buyer House 001, 00000 Synthetic City, DE",
+    "vat_id": "DE-SYN-000000000",
+    "contact": "ap@crosswise-demo.synthetic",
+}
 
 
 def load_fixture_payload(repo_root: Path) -> dict[str, Any]:
@@ -35,6 +49,7 @@ def generate_document_pack(repo_root: Path) -> dict[str, Path]:
     fixtures = load_fixture_payload(repo_root)
     rendered = render_document_pack(fixtures)
     outputs = {
+        "index": repo_root / DOCUMENT_INDEX_OUTPUT_PATH,
         "invoice": repo_root / INVOICE_OUTPUT_PATH,
         "purchase_order": repo_root / PURCHASE_ORDER_OUTPUT_PATH,
         "receipt": repo_root / RECEIPT_OUTPUT_PATH,
@@ -45,22 +60,41 @@ def generate_document_pack(repo_root: Path) -> dict[str, Path]:
     return outputs
 
 
-def generate_document_pack_screenshot(html_path: Path, screenshot_path: Path) -> Path:
+def generate_document_pack_screenshot(
+    html_path: Path,
+    screenshot_path: Path,
+    *,
+    viewport_height: int = 960,
+) -> Path:
     from playwright.sync_api import sync_playwright
 
     screenshot_path.parent.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
-        page = browser.new_page(viewport={"width": 1280, "height": 1500}, device_scale_factor=1)
+        page = browser.new_page(viewport={"width": 1280, "height": viewport_height}, device_scale_factor=1)
         page.goto(html_path.resolve().as_uri())
-        page.screenshot(path=str(screenshot_path), full_page=True)
+        page.screenshot(path=str(screenshot_path), full_page=False)
         browser.close()
     return screenshot_path
+
+
+def generate_document_pack_screenshots(document_paths: dict[str, Path], repo_root: Path) -> dict[str, Path]:
+    screenshot_paths = {
+        "index": repo_root / DOCUMENT_PACK_INDEX_SCREENSHOT_OUTPUT_PATH,
+        "invoice": repo_root / DOCUMENT_PACK_INVOICE_SCREENSHOT_OUTPUT_PATH,
+        "purchase_order": repo_root / DOCUMENT_PACK_PURCHASE_ORDER_SCREENSHOT_OUTPUT_PATH,
+        "receipt": repo_root / DOCUMENT_PACK_RECEIPT_SCREENSHOT_OUTPUT_PATH,
+    }
+    for key, screenshot_path in screenshot_paths.items():
+        viewport_height = 1080 if key == "index" else 960
+        generate_document_pack_screenshot(document_paths[key], screenshot_path, viewport_height=viewport_height)
+    return screenshot_paths
 
 
 def render_document_pack(fixtures: dict[str, Any]) -> dict[str, str]:
     source = _representative_source(fixtures)
     return {
+        "index": _render_document_index(source),
         "invoice": _render_invoice(source),
         "purchase_order": _render_purchase_order(source),
         "receipt": _render_receipt(source),
@@ -127,13 +161,81 @@ def _lines_for_ids(
     return sorted(lines, key=lambda line: line["line_number"])
 
 
+def _render_document_index(source: dict[str, Any]) -> str:
+    bundle = source["bundle"]
+    invoice = source["invoice"]
+    purchase_order = source["purchase_order"]
+    receipt = source["receipt"]
+    supplier_identity = _supplier_identity(source["supplier"])
+    return "\n".join(
+        [
+            "<!doctype html>",
+            '<html lang="en">',
+            "<head>",
+            '  <meta charset="utf-8">',
+            '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+            "  <title>Crosswise Synthetic Document Pack</title>",
+            f"  <style>{_css()}</style>",
+            "</head>",
+            "<body>",
+            '  <main class="document-page pack-index">',
+            '    <header class="masthead">',
+            "      <div>",
+            '        <div class="kicker">Crosswise synthetic document pack</div>',
+            "        <h1>Document Pack</h1>",
+            "      </div>",
+            '      <div class="brand-mark" aria-hidden="true"></div>',
+            "    </header>",
+            '    <section class="identity-strip" aria-label="Document pack identity">',
+            "      <div>",
+            '        <span class="label">Source bundle</span>',
+            f"        <strong>{_e(bundle['bundle_id'])}</strong>",
+            "      </div>",
+            "      <div>",
+            '        <span class="label">Records</span>',
+            "        <strong>"
+            f"{_e(invoice['invoice_number'])} &middot; "
+            f"{_e(purchase_order['purchase_order_id'])} &middot; "
+            f"{_e(receipt['receipt_number'])}"
+            "</strong>",
+            "      </div>",
+            "    </section>",
+            '    <section class="pack-intro" aria-label="Pack summary">',
+            "      <p>These source-record renders show a synthetic transaction between "
+            f"{_e(supplier_identity['name'])} and {_e(BUYER_IDENTITY['name'])}.</p>",
+            "    </section>",
+            '    <section class="pack-links" aria-label="Pack contents">',
+            f"      {_pack_link('invoice.html', 'Invoice', invoice['invoice_number'], 'Synthetic invoice source-record render')}",
+            f"      {_pack_link('purchase_order.html', 'Purchase Order', purchase_order['purchase_order_id'], 'Synthetic purchase order source-record render')}",
+            f"      {_pack_link('receipt.html', 'Goods Receipt', receipt['receipt_number'], 'Synthetic receipt source-record render')}",
+            "    </section>",
+            '    <p class="reviewer-link"><a href="../crosswise_reviewer_v1_0.html">Open the Crosswise reviewer</a></p>',
+            '    <footer class="caption">',
+            "      <strong>Synthetic document notice</strong>",
+            "      <p>These are synthetic, illustrative renders of generated Crosswise source records. "
+            "They are not real documents and contain no real company, supplier, payment, tax, or bank data. "
+            "They are not parsed, ingested, or read back by Crosswise; there is no OCR. "
+            "Crosswise output is not accounting, tax, legal, financial, payment, or compliance advice.</p>",
+            "    </footer>",
+            "  </main>",
+            "</body>",
+            "</html>",
+            "",
+        ]
+    )
+
+
 def _render_invoice(source: dict[str, Any]) -> str:
     invoice = source["invoice"]
+    purchase_order = source["purchase_order"]
+    supplier_identity = _supplier_identity(source["supplier"])
     lines = source["invoice_lines"]
     meta = [
         ("Invoice number", invoice["invoice_number"]),
         ("Invoice date", invoice["invoice_date"]),
         ("Due date", invoice.get("due_date")),
+        ("Payment terms", _payment_terms(invoice["invoice_date"], invoice.get("due_date"))),
+        ("PO reference", purchase_order["purchase_order_id"]),
         ("Currency", invoice["currency"]),
     ]
     table_head = ["Line", "Description", "SKU", "Qty billed", "Unit", "Unit price", "Line total"]
@@ -157,12 +259,14 @@ def _render_invoice(source: dict[str, Any]) -> str:
     return _document_shell(
         title=f"Crosswise Synthetic Invoice - {invoice['invoice_number']}",
         document_type="Invoice",
+        current_document="invoice",
         document_id=invoice["invoice_number"],
         record_note="Generated source record render",
         meta=meta,
-        party_title="Supplier",
-        party_name=invoice["supplier_name_raw"],
-        party_detail="Raw supplier name shown on the synthetic invoice record",
+        parties=[
+            ("Issuer / seller", supplier_identity),
+            ("Bill-to / buyer", BUYER_IDENTITY),
+        ],
         table_head=table_head,
         table_rows=table_rows,
         totals=totals,
@@ -172,6 +276,7 @@ def _render_invoice(source: dict[str, Any]) -> str:
 def _render_purchase_order(source: dict[str, Any]) -> str:
     purchase_order = source["purchase_order"]
     supplier = source["supplier"]
+    supplier_identity = _supplier_identity(supplier)
     lines = source["purchase_order_lines"]
     meta = [
         ("Purchase order", purchase_order["purchase_order_id"]),
@@ -200,12 +305,14 @@ def _render_purchase_order(source: dict[str, Any]) -> str:
     return _document_shell(
         title=f"Crosswise Synthetic Purchase Order - {purchase_order['purchase_order_id']}",
         document_type="Purchase Order",
+        current_document="purchase_order",
         document_id=purchase_order["purchase_order_id"],
         record_note="Generated source record render",
         meta=meta,
-        party_title="Supplier",
-        party_name=supplier["canonical_name"],
-        party_detail="Canonical synthetic supplier carried by the purchase order record",
+        parties=[
+            ("Buyer / orderer", BUYER_IDENTITY),
+            ("Supplier / seller", supplier_identity),
+        ],
         table_head=table_head,
         table_rows=table_rows,
         totals=totals,
@@ -214,6 +321,7 @@ def _render_purchase_order(source: dict[str, Any]) -> str:
 
 def _render_receipt(source: dict[str, Any]) -> str:
     receipt = source["receipt"]
+    supplier_identity = _supplier_identity(source["supplier"])
     lines = source["receipt_lines"]
     meta = [
         ("Receipt number", receipt["receipt_number"]),
@@ -238,12 +346,14 @@ def _render_receipt(source: dict[str, Any]) -> str:
     return _document_shell(
         title=f"Crosswise Synthetic Goods Receipt - {receipt['receipt_number']}",
         document_type="Goods Receipt",
+        current_document="receipt",
         document_id=receipt["receipt_number"],
         record_note="Generated source record render",
         meta=meta,
-        party_title="Supplier",
-        party_name=receipt["supplier_name_raw"],
-        party_detail="Raw supplier name shown on the synthetic receipt record",
+        parties=[
+            ("Receiving party / buyer", BUYER_IDENTITY),
+            ("Supplier / seller", supplier_identity),
+        ],
         table_head=table_head,
         table_rows=table_rows,
         totals=totals,
@@ -254,12 +364,11 @@ def _document_shell(
     *,
     title: str,
     document_type: str,
+    current_document: str,
     document_id: str,
     record_note: str,
     meta: list[tuple[str, Any]],
-    party_title: str,
-    party_name: str,
-    party_detail: str,
+    parties: list[tuple[str, dict[str, str]]],
     table_head: list[str],
     table_rows: list[list[Any]],
     totals: list[tuple[str, Any]],
@@ -283,6 +392,7 @@ def _document_shell(
             "      </div>",
             '      <div class="brand-mark" aria-hidden="true"></div>',
             "    </header>",
+            f"    {_document_nav(current_document)}",
             '    <section class="identity-strip" aria-label="Document identity">',
             '      <div>',
             '        <span class="label">Document ID</span>',
@@ -294,13 +404,7 @@ def _document_shell(
             "      </div>",
             "    </section>",
             f"    {_meta_grid(meta)}",
-            '    <section class="party-block" aria-label="Document party">',
-            "      <div>",
-            f"        <span class=\"label\">{_e(party_title)}</span>",
-            f"        <h2>{_e(party_name)}</h2>",
-            f"        <p>{_e(party_detail)}</p>",
-            "      </div>",
-            "    </section>",
+            f"    {_party_grid(parties)}",
             '    <section class="lines-section" aria-label="Line items">',
             '      <div class="section-rule">',
             '        <span>Line items</span>',
@@ -323,14 +427,83 @@ def _document_shell(
     )
 
 
+def _supplier_identity(supplier: dict[str, Any]) -> dict[str, str]:
+    supplier_number = "".join(character for character in supplier["supplier_id"] if character.isdigit()).zfill(3)
+    country_code = supplier.get("country_code") or "SYN"
+    legal_form = "GmbH" if country_code == "DE" else "Ltd"
+    return {
+        "name": f"{supplier['canonical_name']} {legal_form}",
+        "address": f"SYN Supplier Campus {supplier_number}, 000{supplier_number} Synthetic City, {country_code}",
+        "vat_id": f"{country_code}-SYN-{int(supplier_number):09d}",
+        "contact": f"accounts@supplier-{supplier_number}.synthetic",
+    }
+
+
+def _payment_terms(invoice_date: str, due_date: str | None) -> str | None:
+    if due_date is None:
+        return None
+    days = (date.fromisoformat(due_date) - date.fromisoformat(invoice_date)).days
+    return f"Net {days} - due {due_date}"
+
+
+def _document_nav(current_document: str) -> str:
+    items = [
+        ("index", "Pack index", "index.html"),
+        ("invoice", "Invoice", "invoice.html"),
+        ("purchase_order", "Purchase order", "purchase_order.html"),
+        ("receipt", "Receipt", "receipt.html"),
+        ("reviewer", "Reviewer", "../crosswise_reviewer_v1_0.html"),
+    ]
+    rendered = []
+    for key, label, href in items:
+        if key == current_document:
+            rendered.append(f'      <span aria-current="page">{_e(label)}</span>')
+        else:
+            rendered.append(f'      <a href="{_e(href)}">{_e(label)}</a>')
+    return "\n".join(
+        [
+            '    <nav class="document-nav" aria-label="Document pack navigation">',
+            *rendered,
+            "    </nav>",
+        ]
+    )
+
+
+def _party_grid(parties: list[tuple[str, dict[str, str]]]) -> str:
+    rows = []
+    for label, identity in parties:
+        rows.extend(
+            [
+                '      <article class="party-card">',
+                f'        <span class="label">{_e(label)}</span>',
+                f"        <h2>{_e(identity['name'])}</h2>",
+                f"        <p>{_e(identity['address'])}</p>",
+                f"        <p><span>VAT ID</span> {_e(identity['vat_id'])}</p>",
+                f"        <p><span>Contact</span> {_e(identity['contact'])}</p>",
+                "      </article>",
+            ]
+        )
+    return "\n".join(['    <section class="party-grid" aria-label="Document parties">', *rows, "    </section>"])
+
+
+def _pack_link(href: str, title: str, record_id: str, description: str) -> str:
+    return (
+        f'<a class="pack-link" href="{_e(href)}">'
+        f'<span>{_e(title)} - <code>{_e(record_id)}</code></span>'
+        f'<strong>{_e(description)}</strong>'
+        "</a>"
+    )
+
+
 def _meta_grid(items: list[tuple[str, Any]]) -> str:
     rows = []
     for label, value in items:
         if value is None:
             continue
+        card_class = "meta-card meta-card-wide" if label == "Payment terms" else "meta-card"
         rows.extend(
             [
-                '      <div class="meta-card">',
+                f'      <div class="{card_class}">',
                 f"        <span>{_e(label)}</span>",
                 f"        <strong>{_e(value)}</strong>",
                 "      </div>",
@@ -450,6 +623,9 @@ body {
 .kicker,
 .label,
 .meta-card span,
+.document-nav,
+.pack-link span,
+.reviewer-link,
 .section-rule,
 .line-table th,
 .caption strong {
@@ -461,6 +637,10 @@ body {
 }
 
 .kicker,
+.document-nav a,
+.document-nav span,
+.pack-link span,
+.reviewer-link a,
 .section-rule,
 .caption strong {
   color: var(--amber);
@@ -490,6 +670,10 @@ h2 {
   line-height: 1.05;
 }
 
+a {
+  color: inherit;
+}
+
 .brand-mark {
   width: 36px;
   height: 36px;
@@ -503,6 +687,76 @@ h2 {
   margin-top: 28px;
   padding: 18px 0;
   border-bottom: 1px solid var(--line);
+}
+
+.document-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.document-nav a,
+.document-nav span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  background: rgba(33, 30, 25, 0.035);
+  text-decoration: none;
+}
+
+.document-nav span {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.pack-intro {
+  margin-top: 30px;
+  padding: 24px 0 0;
+}
+
+.pack-intro p {
+  max-width: 650px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.pack-links {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.pack-link {
+  display: block;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  background: rgba(33, 30, 25, 0.045);
+  text-decoration: none;
+}
+
+.pack-link strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.pack-link code {
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.reviewer-link {
+  margin-top: 24px;
 }
 
 .identity-strip div:last-child {
@@ -541,18 +795,41 @@ h2 {
   border-bottom: 1px solid var(--line);
 }
 
-.party-block {
+.meta-card-wide {
+  grid-column: span 2;
+}
+
+.meta-card-wide strong {
+  white-space: nowrap;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
   margin-top: 34px;
-  padding: 28px 30px;
+}
+
+.party-card {
+  min-height: 220px;
+  padding: 26px 28px;
   background: rgba(33, 30, 25, 0.045);
   border-left: 5px solid var(--amber);
 }
 
-.party-block p {
-  max-width: 560px;
+.party-card p {
   margin-top: 8px;
   color: var(--muted);
   font-size: 14px;
+}
+
+.party-card p span {
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .lines-section {
@@ -670,6 +947,14 @@ h2 {
 
   .meta-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meta-card-wide strong {
+    white-space: normal;
+  }
+
+  .party-grid {
+    grid-template-columns: 1fr;
   }
 
   .lines-section {

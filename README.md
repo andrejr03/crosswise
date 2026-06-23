@@ -1,6 +1,6 @@
 # Crosswise
 
-![Crosswise showcase](assets/prototypes/crosswise-showcase.png)
+![Crosswise reviewer discrepancy showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
 
 AI Document Reconciliation
 
@@ -48,6 +48,24 @@ Completed local portfolio demo
 - Slice 10 interactive reviewer (offline, self-contained case explorer) completed.
 - Synthetic document pack completed.
 
+## Screenshots
+
+![Reviewer discrepancy showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
+
+Reviewer discrepancy view with a unit-price mismatch routed to human review.
+
+![Interactive reviewer showcase](docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
+
+Static, offline case explorer for generated synthetic reconciliation cases.
+
+![Synthetic invoice showcase](docs/evidence/CROSSWISE_DOCUMENT_PACK_INVOICE_SHOWCASE.png)
+
+Synthetic invoice source-record render with two-party identity and PO reference.
+
+![Synthetic document pack index](docs/evidence/CROSSWISE_DOCUMENT_PACK_INDEX_SHOWCASE.png)
+
+Offline document-pack index linking the invoice, purchase order, receipt, and reviewer.
+
 ## Fresh-Clone Quickstart
 
 From the repository root:
@@ -89,6 +107,7 @@ python3 scripts/run_full_pipeline.py
 - `docs/evidence/crosswise_reviewer_v1_0.html` — self-contained static HTML reviewer interface.
 - `docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png` — generated screenshot of the document-panel discrepancy view.
 - `docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png` — generated screenshot of the interactive case explorer on a selected discrepancy case.
+- `docs/evidence/documents/index.html` — synthetic document pack index linking the invoice, purchase order, and receipt renders.
 - `docs/evidence/documents/invoice.html` — standalone synthetic invoice source-record render.
 - `docs/evidence/documents/purchase_order.html` — standalone synthetic purchase order source-record render.
 - `docs/evidence/documents/receipt.html` — standalone synthetic receipt source-record render.
@@ -133,13 +152,13 @@ python3 scripts/generate_reviewer.py
 
 ## Documentation
 
-- [Project Foundation](docs/plans/CROSSWISE_PROJECT_SYNTHESIS_AND_FOUNDATION_v1.0.md)
 - [Slice 0 Technical Contract](docs/plans/CROSSWISE_SLICE_0_TECHNICAL_CONTRACT_AND_SYSTEM_SPECIFICATION_v1.0.md)
 - [Evidence Index](docs/evidence/INDEX.md)
 - [Local Evidence Report](docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
 - [Static Reviewer HTML](docs/evidence/crosswise_reviewer_v1_0.html)
 - [Reviewer Discrepancy Showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
 - [Reviewer Interactive Showcase](docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
+- [Synthetic Document Pack Index](docs/evidence/documents/index.html)
 - [Synthetic Invoice Render](docs/evidence/documents/invoice.html)
 - [Synthetic Purchase Order Render](docs/evidence/documents/purchase_order.html)
 - [Synthetic Receipt Render](docs/evidence/documents/receipt.html)

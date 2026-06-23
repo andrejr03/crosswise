@@ -63,6 +63,9 @@ body {
 .kicker,
 .label,
 .meta-card span,
+.document-nav,
+.pack-link span,
+.reviewer-link,
 .section-rule,
 .line-table th,
 .caption strong {
@@ -74,6 +77,10 @@ body {
 }
 
 .kicker,
+.document-nav a,
+.document-nav span,
+.pack-link span,
+.reviewer-link a,
 .section-rule,
 .caption strong {
   color: var(--amber);
@@ -103,6 +110,10 @@ h2 {
   line-height: 1.05;
 }
 
+a {
+  color: inherit;
+}
+
 .brand-mark {
   width: 36px;
   height: 36px;
@@ -116,6 +127,76 @@ h2 {
   margin-top: 28px;
   padding: 18px 0;
   border-bottom: 1px solid var(--line);
+}
+
+.document-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.document-nav a,
+.document-nav span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  background: rgba(33, 30, 25, 0.035);
+  text-decoration: none;
+}
+
+.document-nav span {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.pack-intro {
+  margin-top: 30px;
+  padding: 24px 0 0;
+}
+
+.pack-intro p {
+  max-width: 650px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.pack-links {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.pack-link {
+  display: block;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  background: rgba(33, 30, 25, 0.045);
+  text-decoration: none;
+}
+
+.pack-link strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.pack-link code {
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.reviewer-link {
+  margin-top: 24px;
 }
 
 .identity-strip div:last-child {
@@ -154,18 +235,41 @@ h2 {
   border-bottom: 1px solid var(--line);
 }
 
-.party-block {
+.meta-card-wide {
+  grid-column: span 2;
+}
+
+.meta-card-wide strong {
+  white-space: nowrap;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
   margin-top: 34px;
-  padding: 28px 30px;
+}
+
+.party-card {
+  min-height: 220px;
+  padding: 26px 28px;
   background: rgba(33, 30, 25, 0.045);
   border-left: 5px solid var(--amber);
 }
 
-.party-block p {
-  max-width: 560px;
+.party-card p {
   margin-top: 8px;
   color: var(--muted);
   font-size: 14px;
+}
+
+.party-card p span {
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .lines-section {
@@ -285,6 +389,14 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .meta-card-wide strong {
+    white-space: normal;
+  }
+
+  .party-grid {
+    grid-template-columns: 1fr;
+  }
+
   .lines-section {
     overflow-x: auto;
   }
@@ -303,6 +415,13 @@ h2 {
       </div>
       <div class="brand-mark" aria-hidden="true"></div>
     </header>
+        <nav class="document-nav" aria-label="Document pack navigation">
+      <a href="index.html">Pack index</a>
+      <a href="invoice.html">Invoice</a>
+      <a href="purchase_order.html">Purchase order</a>
+      <span aria-current="page">Receipt</span>
+      <a href="../crosswise_reviewer_v1_0.html">Reviewer</a>
+    </nav>
     <section class="identity-strip" aria-label="Document identity">
       <div>
         <span class="label">Document ID</span>
@@ -327,12 +446,21 @@ h2 {
         <strong>po_003</strong>
       </div>
     </section>
-    <section class="party-block" aria-label="Document party">
-      <div>
-        <span class="label">Supplier</span>
-        <h2>Synthetic Supplier 003</h2>
-        <p>Raw supplier name shown on the synthetic receipt record</p>
-      </div>
+        <section class="party-grid" aria-label="Document parties">
+      <article class="party-card">
+        <span class="label">Receiving party / buyer</span>
+        <h2>Crosswise Demo Buyer GmbH</h2>
+        <p>SYN Buyer House 001, 00000 Synthetic City, DE</p>
+        <p><span>VAT ID</span> DE-SYN-000000000</p>
+        <p><span>Contact</span> ap@crosswise-demo.synthetic</p>
+      </article>
+      <article class="party-card">
+        <span class="label">Supplier / seller</span>
+        <h2>Synthetic Supplier 003 GmbH</h2>
+        <p>SYN Supplier Campus 003, 000003 Synthetic City, DE</p>
+        <p><span>VAT ID</span> DE-SYN-000000003</p>
+        <p><span>Contact</span> accounts@supplier-003.synthetic</p>
+      </article>
     </section>
     <section class="lines-section" aria-label="Line items">
       <div class="section-rule">

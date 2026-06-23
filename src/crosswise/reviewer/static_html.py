@@ -939,6 +939,18 @@ code {
   overflow-x: auto;
 }
 
+.utility-link {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.utility-link a {
+  color: var(--amber);
+  text-decoration-color: var(--amber-line);
+  text-underline-offset: 3px;
+}
+
 /* Interactive case reviewer */
 .explorer {
   margin-top: 26px;
@@ -1954,6 +1966,7 @@ def _reproduction_commands() -> str:
       <ul class="command-list">
 {items}
       </ul>
+      <p class="utility-link"><a href="documents/index.html">View the synthetic source document pack</a></p>
     </section>
 """.rstrip()
 

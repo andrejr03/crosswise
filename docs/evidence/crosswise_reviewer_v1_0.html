@@ -819,6 +819,18 @@ code {
   overflow-x: auto;
 }
 
+.utility-link {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.utility-link a {
+  color: var(--amber);
+  text-decoration-color: var(--amber-line);
+  text-underline-offset: 3px;
+}
+
 /* Interactive case reviewer */
 .explorer {
   margin-top: 26px;
@@ -3857,6 +3869,7 @@ code {
         <li><code>python3 scripts/generate_reviewer.py</code></li>
         <li><code>python3 -m pytest</code></li>
       </ul>
+      <p class="utility-link"><a href="documents/index.html">View the synthetic source document pack</a></p>
     </section>
   </main>
   <script>(function () {
