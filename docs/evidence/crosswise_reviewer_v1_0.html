@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crosswise Reviewer</title>
+  <style>:root {
+  --ink: #f4efe6;
+  --muted: #bdb1a1;
+  --paper: #211f1b;
+  --panel: #2a2721;
+  --panel-strong: #332f27;
+  --line: #514838;
+  --amber: #d8a441;
+  --amber-soft: #5c4724;
+  --ok: #9eb77e;
+  --review: #d8a441;
+  --blocked: #d47663;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
+  line-height: 1.5;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 48px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+  gap: 24px;
+  align-items: end;
+  padding: 28px 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.kicker {
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+h1 {
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 8vw, 84px);
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.subtitle {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.hero-note {
+  color: var(--muted);
+  border-left: 3px solid var(--amber);
+  padding: 2px 0 2px 16px;
+}
+
+.notice-band,
+.summary-grid,
+.example-grid,
+.case-section,
+.command-section {
+  margin-top: 22px;
+}
+
+.notice-band {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.notice,
+.panel,
+.example-card,
+.case-section,
+.command-section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.notice {
+  padding: 16px;
+}
+
+.notice strong {
+  display: block;
+  color: var(--amber);
+  margin-bottom: 5px;
+}
+
+.pipeline {
+  margin-top: 22px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.pipeline h2,
+.case-section h2,
+.command-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.pipeline ol {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.pipeline li {
+  min-height: 92px;
+  padding: 12px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  counter-increment: step;
+}
+
+.pipeline li::before {
+  content: counter(step, decimal-leading-zero);
+  display: block;
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.panel {
+  padding: 18px;
+}
+
+.panel h2 {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  padding: 14px;
+  background: #1c1a17;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.metric span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.example-card {
+  padding: 18px;
+}
+
+.example-card h3 {
+  font-size: 15px;
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+
+.bundle {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.explain {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--amber-soft);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.route-auto_accept {
+  background: rgba(158, 183, 126, 0.18);
+  color: var(--ok);
+}
+
+.route-needs_review {
+  background: rgba(216, 164, 65, 0.18);
+  color: var(--review);
+}
+
+.route-blocked {
+  background: rgba(212, 118, 99, 0.18);
+  color: var(--blocked);
+}
+
+.case-section,
+.command-section {
+  padding: 18px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--amber);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+td:first-child,
+td:nth-child(4) {
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+}
+
+code {
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+}
+
+.command-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-list li {
+  padding: 11px 12px;
+  background: #1c1a17;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+@media (max-width: 880px) {
+  .hero,
+  .notice-band,
+  .summary-grid,
+  .example-grid,
+  .pipeline ol {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}</style>
+</head>
+<body>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="kicker">Crosswise Reviewer</div>
+        <h1>Crosswise Reviewer</h1>
+        <p class="subtitle">AI Document Reconciliation</p>
+      </div>
+      <p class="hero-note">Static local reviewer interface for generated reconciliation, evaluation, and reliability outputs.</p>
+    </section>
+
+    <section class="notice-band" aria-label="Scope notices">
+      <div class="notice">
+        <strong>Synthetic-only notice</strong>
+        <p>Uses generated Crosswise fixtures only. No real invoices, real company data, PII, bank details, tax identifiers, payment information, or real supplier data.</p>
+      </div>
+      <div class="notice">
+        <strong>Non-advice notice</strong>
+        <p>Outputs support human review only and are not accounting, tax, legal, financial, payment, compliance, or autonomous-action advice.</p>
+      </div>
+    </section>
+
+    <section class="pipeline" aria-labelledby="pipeline-title">
+      <h2 id="pipeline-title">Pipeline Summary</h2>
+      <ol>
+        <li>Synthetic data generation</li>
+        <li>Schema validation and normalization</li>
+        <li>Reconciliation baseline</li>
+        <li>Evaluation harness</li>
+        <li>Reliability routing</li>
+      </ol>
+    </section>
+
+    <section class="summary-grid" aria-label="Metrics summaries">
+      <div class="panel">
+        <h2>Evaluation Summary</h2>
+        <div class="metrics">
+          
+          <div class="metric">
+            <span>Overall precision</span>
+            <strong>1.000</strong>
+          </div>
+          
+          <div class="metric">
+            <span>Overall recall</span>
+            <strong>1.000</strong>
+          </div>
+          
+          <div class="metric">
+            <span>Overall F1</span>
+            <strong>1.000</strong>
+          </div>
+          
+          <div class="metric">
+            <span>Macro F1</span>
+            <strong>1.000</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Reliability Summary</h2>
+        <div class="metrics">
+          
+          <div class="metric">
+            <span>auto_accept count</span>
+            <strong>1</strong>
+          </div>
+          
+          <div class="metric">
+            <span>needs_review count</span>
+            <strong>8</strong>
+          </div>
+          
+          <div class="metric">
+            <span>blocked count</span>
+            <strong>1</strong>
+          </div>
+          
+          <div class="metric">
+            <span>Average confidence</span>
+            <strong>0.674</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-grid" aria-label="Highlighted examples">
+
+      <article class="example-card">
+        <h3>Clean Match</h3>
+        <p class="bundle">bundle_clean_match_001</p>
+        <div class="pills">
+          <span class="pill route-auto_accept">auto_accept</span>
+          <span class="pill">0.980</span>
+        </div>
+        <div class="pills"><span class="pill">clean_match</span></div>
+        <p class="explain">All deterministic baseline checks passed for the bundle.</p>
+      </article>
+
+      <article class="example-card">
+        <h3>Needs Review</h3>
+        <p class="bundle">bundle_duplicate_invoice_006</p>
+        <div class="pills">
+          <span class="pill route-needs_review">needs_review</span>
+          <span class="pill">0.650</span>
+        </div>
+        <div class="pills"><span class="pill">duplicate_invoice</span></div>
+        <p class="explain">Deterministic baseline reconciliation detected one or more reviewable discrepancies.</p>
+      </article>
+
+      <article class="example-card">
+        <h3>Blocked</h3>
+        <p class="bundle">bundle_schema_validation_failure_010</p>
+        <div class="pills">
+          <span class="pill route-blocked">blocked</span>
+          <span class="pill">0.250</span>
+        </div>
+        <div class="pills"><span class="pill">schema_validation_failure</span></div>
+        <p class="explain">Deterministic baseline reconciliation detected one or more reviewable discrepancies.</p>
+      </article>
+    </section>
+
+    <section class="case-section" aria-labelledby="cases-title">
+      <h2 id="cases-title">Case Table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Bundle ID</th>
+              <th>Detected labels</th>
+              <th>Route</th>
+              <th>Confidence score</th>
+              <th>Explanation</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>bundle_clean_match_001</td>
+              <td><span class="pill">clean_match</span></td>
+              <td><span class="pill route-auto_accept">auto_accept</span></td>
+              <td>0.980</td>
+              <td>All deterministic baseline checks passed for the bundle.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_duplicate_invoice_006</td>
+              <td><span class="pill">duplicate_invoice</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.650</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_late_receipt_008</td>
+              <td><span class="pill">late_receipt</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.830</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_low_confidence_extraction_009</td>
+              <td><span class="pill">low_confidence_extraction</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.550</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_missing_invoice_line_004</td>
+              <td><span class="pill">missing_invoice_line</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.650</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_missing_receipt_line_005</td>
+              <td><span class="pill">missing_receipt_line</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.600</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_quantity_mismatch_002</td>
+              <td><span class="pill">quantity_mismatch</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.700</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_schema_validation_failure_010</td>
+              <td><span class="pill">schema_validation_failure</span></td>
+              <td><span class="pill route-blocked">blocked</span></td>
+              <td>0.250</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_supplier_alias_mismatch_007</td>
+              <td><span class="pill">supplier_alias_mismatch</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.830</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+
+            <tr>
+              <td>bundle_unit_price_mismatch_003</td>
+              <td><span class="pill">unit_price_mismatch</span></td>
+              <td><span class="pill route-needs_review">needs_review</span></td>
+              <td>0.700</td>
+              <td>Deterministic baseline reconciliation detected one or more reviewable discrepancies.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="command-section" aria-labelledby="commands-title">
+      <h2 id="commands-title">Reproduction Commands</h2>
+      <ul class="command-list">
+        <li><code>python3 scripts/generate_synthetic_data.py</code></li>
+        <li><code>python3 scripts/validate_fixtures.py</code></li>
+        <li><code>python3 scripts/run_reconciliation.py</code></li>
+        <li><code>python3 scripts/evaluate_reconciliation.py</code></li>
+        <li><code>python3 scripts/score_reliability.py</code></li>
+        <li><code>python3 scripts/generate_report.py</code></li>
+        <li><code>python3 scripts/generate_reviewer.py</code></li>
+        <li><code>python3 -m pytest</code></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

@@ -35,6 +35,7 @@ Early Development
 - Slice 4 evaluation harness completed.
 - Slice 5 confidence routing and reliability layer completed.
 - Slice 6 local evidence report completed.
+- Slice 7 static reviewer interface completed.
 
 ## Local Development
 
@@ -46,6 +47,7 @@ python3 scripts/run_reconciliation.py
 python3 scripts/evaluate_reconciliation.py
 python3 scripts/score_reliability.py
 python3 scripts/generate_report.py
+python3 scripts/generate_reviewer.py
 ```
 
 ## Documentation
@@ -53,6 +55,7 @@ python3 scripts/generate_report.py
 - [Project Foundation](docs/plans/CROSSWISE_PROJECT_SYNTHESIS_AND_FOUNDATION_v1.0.md)
 - [Slice 0 Technical Contract](docs/plans/CROSSWISE_SLICE_0_TECHNICAL_CONTRACT_AND_SYSTEM_SPECIFICATION_v1.0.md)
 - [Local Evidence Report](docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
+- [Static Reviewer Interface](docs/evidence/crosswise_reviewer_v1_0.html)
 
 ## Design Prototype
 
