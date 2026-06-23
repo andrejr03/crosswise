@@ -1,0 +1,11 @@
+# Crosswise Evidence Index
+
+- [Slice 1 Synthetic Data Generator Evidence](CROSSWISE_SLICE_1_SYNTHETIC_DATA_GENERATOR_v1.0.md)
+- [Slice 2 Schema Validation and Normalization Evidence](CROSSWISE_SLICE_2_SCHEMA_VALIDATION_AND_NORMALIZATION_v1.0.md)
+- [Slice 3 Reconciliation Baseline and Line-Item Matching Evidence](CROSSWISE_SLICE_3_RECONCILIATION_BASELINE_AND_LINE_ITEM_MATCHING_v1.0.md)
+- [Slice 4 Evaluation Harness and Discrepancy Metrics Evidence](CROSSWISE_SLICE_4_EVALUATION_HARNESS_AND_DISCREPANCY_METRICS_v1.0.md)
+- [Slice 5 Confidence Routing and Reliability Layer Evidence](CROSSWISE_SLICE_5_CONFIDENCE_ROUTING_AND_RELIABILITY_LAYER_v1.0.md)
+- [Slice 6 Local Report Generation and Evidence Summary](CROSSWISE_SLICE_6_LOCAL_REPORT_GENERATION_AND_EVIDENCE_SUMMARY_v1.0.md)
+- [Slice 7 Local Review Dashboard Static Reviewer Interface](CROSSWISE_SLICE_7_LOCAL_REVIEW_DASHBOARD_STATIC_REVIEWER_INTERFACE_v1.0.md)
+- [Local Evidence Report](CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
+- [Static Reviewer HTML](crosswise_reviewer_v1_0.html)
