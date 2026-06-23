@@ -50,10 +50,6 @@ Completed local portfolio demo
 
 ## Screenshots
 
-![Reviewer discrepancy showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
-
-Reviewer discrepancy view with a unit-price mismatch routed to human review.
-
 ![Interactive reviewer showcase](docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
 
 Static, offline case explorer for generated synthetic reconciliation cases.
