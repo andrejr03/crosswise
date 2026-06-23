@@ -45,6 +45,7 @@ Early Development
 - Slice 7 static reviewer interface completed.
 - Slice 8 README demo polish and fresh-clone reproduction path completed.
 - Slice 9 document-panel reviewer completed.
+- Slice 10 interactive reviewer (offline, self-contained case explorer) completed.
 
 ## Fresh-Clone Quickstart
 
@@ -86,6 +87,7 @@ python3 scripts/run_full_pipeline.py
 - `docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md` — reviewer-readable Markdown evidence report.
 - `docs/evidence/crosswise_reviewer_v1_0.html` — self-contained static HTML reviewer interface.
 - `docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png` — generated screenshot of the document-panel discrepancy view.
+- `docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png` — generated screenshot of the interactive case explorer on a selected discrepancy case.
 
 ## Open the Static Reviewer
 
@@ -132,6 +134,7 @@ python3 scripts/generate_reviewer.py
 - [Local Evidence Report](docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
 - [Static Reviewer HTML](docs/evidence/crosswise_reviewer_v1_0.html)
 - [Reviewer Discrepancy Showcase](docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
+- [Reviewer Interactive Showcase](docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)
 
 ## Design Prototype
 

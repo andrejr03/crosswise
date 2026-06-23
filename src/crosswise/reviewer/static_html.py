@@ -21,6 +21,8 @@ REQUIRED_OUTPUT_PATHS = {
 }
 DEFAULT_OUTPUT_PATH = Path("docs/evidence/crosswise_reviewer_v1_0.html")
 SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png")
+INTERACTIVE_SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png")
+INTERACTIVE_EXPLORER_SELECTOR = "#interactive-case-explorer"
 CURATED_STORY_LABELS = [
     ["clean_match"],
     ["quantity_mismatch"],
@@ -105,14 +107,14 @@ def render_static_reviewer(payloads: dict[str, Any]) -> str:
             "</head>",
             "<body>",
             '  <main class="shell">',
-            _hero(),
-            _notice_band(),
-            _hero_discrepancy_story(hero_case, reliability_cases.get(hero_case["bundle_id"], {}), fixture_index),
+            _interactive_explorer(cases, reliability_cases, fixture_index, hero_case["bundle_id"]),
             _metric_sections(evaluation, reliability),
-            _document_panel_stories(cases, reliability_cases, fixture_index, hero_case["bundle_id"]),
+            _reviewer_pillars(),
+            _notice_band(),
             _pipeline_summary(),
             _reproduction_commands(),
             "  </main>",
+            f"  <script>{_explorer_script()}</script>",
             "</body>",
             "</html>",
             "",
@@ -185,10 +187,10 @@ h1, h2, h3, p {
 h1 {
   margin-top: 10px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(42px, 7vw, 76px);
+  font-size: 58px;
   font-weight: 500;
   letter-spacing: 0;
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .subtitle {
@@ -367,7 +369,7 @@ h1 {
 
 .section-heading h2 {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: 40px;
   font-weight: 500;
   line-height: 1.05;
 }
@@ -933,6 +935,180 @@ code {
   overflow-x: auto;
 }
 
+/* Interactive case reviewer */
+.explorer {
+  margin-top: 26px;
+}
+
+.hero-core {
+  display: block;
+}
+
+.js-on .hero-core:not(.is-active),
+.js-on .case-detail:not(.is-active) {
+  display: none;
+}
+
+.signature-rail {
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.signature-rail-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 14px;
+}
+
+.signature-rail-header p {
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.signature-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.signature-case,
+.case-index-button {
+  border: 1px solid var(--line);
+  color: var(--soft);
+  cursor: pointer;
+  text-align: left;
+}
+
+.signature-case {
+  display: grid;
+  gap: 7px;
+  min-height: 96px;
+  padding: 16px;
+  background: var(--panel-quiet);
+}
+
+.signature-case:hover,
+.case-index-button:hover {
+  border-color: var(--amber-line);
+  color: var(--ink);
+}
+
+.signature-case.is-active {
+  background: var(--amber-wash);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.signature-case-title,
+.case-index-title {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  line-height: 1.08;
+}
+
+.signature-case.is-active .signature-case-title {
+  color: #f0d187;
+}
+
+.signature-case-purpose,
+.case-index-meta {
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.case-detail-region,
+.case-index {
+  margin-top: 28px;
+}
+
+.case-detail-region {
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.case-detail-region .section-heading {
+  margin-bottom: 14px;
+}
+
+.case-detail {
+  display: block;
+}
+
+.case-detail .story-card {
+  opacity: 0.88;
+}
+
+.case-detail .explanation-block {
+  margin-top: 0;
+}
+
+.case-index {
+  background: transparent;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.case-index summary {
+  padding: 18px 0;
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.case-index-list {
+  display: grid;
+  gap: 8px;
+  padding: 0 0 18px;
+}
+
+.case-index-button {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  background: var(--panel-quiet);
+}
+
+.case-index-button.is-active {
+  border-color: var(--amber);
+  background: var(--amber-wash);
+}
+
+.case-index-number {
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+.case-index-button.is-active .case-index-title,
+.case-index-button.is-active .case-index-number {
+  color: var(--amber);
+}
+
+.explorer-fallback-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.js-on .explorer-fallback-note {
+  display: none;
+}
+
 @media (max-width: 880px) {
   .hero,
   .notice-band,
@@ -943,6 +1119,8 @@ code {
   .document-grid,
   .explanation-grid,
   .pipeline ol,
+  .signature-options,
+  .case-index-button,
   .condensed-case {
     grid-template-columns: 1fr;
   }
@@ -954,6 +1132,14 @@ code {
   .hero-note {
     text-align: left;
   }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .section-heading h2 {
+    font-size: 30px;
+  }
 }
 """.strip()
 
@@ -963,8 +1149,8 @@ def _hero() -> str:
     <section class="hero">
       <div>
         <div class="kicker">Crosswise Reviewer</div>
-        <h1>Crosswise</h1>
-        <p class="subtitle">Static local reviewer for evidence-backed invoice, purchase order, and receipt reconciliation decisions.</p>
+        <h1>Crosswise detected a discrepancy &mdash; and shows you why.</h1>
+        <p class="subtitle">Pick a synthetic case to see the flagged field, the evidence, and the route without changing the underlying reconciliation output.</p>
       </div>
       <p class="hero-note">Synthetic test cases<br>Generated outputs only</p>
     </section>
@@ -1018,6 +1204,34 @@ def _metric_sections(evaluation: dict[str, Any], reliability: dict[str, Any]) ->
       {_metric("needs_review count", reliability_summary.get("needs_review"))}
       {_metric("blocked count", reliability_summary.get("blocked"))}
       {_metric("Average confidence", reliability_summary.get("average_confidence"))}
+    </section>
+""".rstrip()
+
+
+def _reviewer_pillars() -> str:
+    return """
+    <section class="reviewer-pillars" aria-label="Reviewer pillars">
+      <div class="rev-features">
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9671;</span>
+          <h3>Line-item matching</h3>
+          <p>Every line compared &mdash; not just document totals.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9723;</span>
+          <h3>Field-level evidence</h3>
+          <p>Each result traces back to its source field.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9711;</span>
+          <h3>Human review routing</h3>
+          <p>Low-confidence cases escalate to a person.</p>
+        </div>
+      </div>
+      <footer class="rev-foot">
+        <span>AI Document Reconciliation</span>
+        <span>invoices &middot; purchase orders &middot; receipts</span>
+      </footer>
     </section>
 """.rstrip()
 
@@ -1083,9 +1297,42 @@ def _case_table(cases: list[dict[str, Any]], reliability_cases: dict[str, dict[s
 
 
 def _hero_discrepancy_story(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+    fixture_index: dict[str, dict[str, Any]],
+    default_bundle_id: str,
+) -> str:
+    hero_cores = "\n".join(
+        _hero_core(case, reliability_cases.get(case["bundle_id"], {}), fixture_index, default_bundle_id)
+        for case in cases
+    )
+    rail = _signature_rail(cases, reliability_cases, default_bundle_id)
+    return f"""
+      <section class="hero-story" id="document-panel-reconciliation-view" aria-label="Hero reconciliation case" data-hero-case="{_e(default_bundle_id)}">
+        <header class="rev-brand">
+          <div class="rev-brand-id">
+            <span class="rev-diamond" aria-hidden="true"></span>
+            <div>
+              <div class="rev-wordmark">Crosswise</div>
+              <div class="rev-tagline">AI Document Reconciliation</div>
+            </div>
+          </div>
+          <div class="rev-build">
+            <span class="rev-build-line"><span class="rev-dot" aria-hidden="true"></span>Dev build</span>
+            <span class="rev-build-sub">synthetic test cases</span>
+          </div>
+        </header>
+{hero_cores}
+{rail}
+      </section>
+""".rstrip()
+
+
+def _hero_core(
     case: dict[str, Any],
     reliability: dict[str, Any],
     fixture_index: dict[str, dict[str, Any]],
+    default_bundle_id: str,
 ) -> str:
     route = reliability.get("reliability_route", case.get("route", "unknown"))
     confidence = reliability.get("confidence_score")
@@ -1096,25 +1343,12 @@ def _hero_discrepancy_story(
     discrepancy_word = "discrepancy" if discrepancy_count == 1 else "discrepancies"
     po_label = _strip_prefix(po.get("purchase_order_id", "—"), "po_")
     invoice_label = invoice.get("invoice_number", invoice.get("invoice_id", "—"))
+    active = " is-active" if case["bundle_id"] == default_bundle_id else ""
     return f"""
-    <section class="hero-story" id="document-panel-reconciliation-view" aria-labelledby="hero-story-title" data-hero-case="{_e(case['bundle_id'])}">
-      <header class="rev-brand">
-        <div class="rev-brand-id">
-          <span class="rev-diamond" aria-hidden="true"></span>
-          <div>
-            <div class="rev-wordmark">Crosswise</div>
-            <div class="rev-tagline">AI Document Reconciliation</div>
-          </div>
-        </div>
-        <div class="rev-build">
-          <span class="rev-build-line"><span class="rev-dot" aria-hidden="true"></span>Dev build</span>
-          <span class="rev-build-sub">synthetic test cases</span>
-        </div>
-      </header>
-
+        <div class="hero-core{active}" data-hero-core="{_e(case['bundle_id'])}" data-hero-case="{_e(case['bundle_id'])}">
       <div class="rev-context">
         <span class="rev-context-doc">Invoice {_e(invoice_label)}</span>
-        <span class="rev-context-mid" id="hero-story-title">&#8644; Matching</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
         <span class="rev-context-doc rev-context-doc-end">PO {_e(po_label)}</span>
       </div>
 
@@ -1138,39 +1372,16 @@ def _hero_discrepancy_story(
       <div class="rev-decision">
         <section class="hero-confidence" aria-label="Model confidence">
           <div class="condensed-label">Model confidence</div>
-          <div class="confidence-number">{_e(_format_metric(confidence))}<span>below threshold</span></div>
+          <div class="confidence-number">{_e(_format_metric(confidence))}<span>{_e(_confidence_note(route))}</span></div>
           <div class="confidence-track"><span class="confidence-fill" style="width: {confidence_pct}%"></span></div>
         </section>
         <section class="hero-action" aria-label="Route action">
           <div class="condensed-label">Action</div>
-          <div class="action-button">&#8594; Route to human review</div>
+          <div class="action-button">&#8594; {_e(_route_action_label(route))}</div>
           <p>{discrepancy_count} {discrepancy_word} &middot; evidence linked &middot; {_e(route)} route assigned</p>
         </section>
       </div>
-
-      <div class="rev-features">
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9671;</span>
-          <h3>Line-item matching</h3>
-          <p>Every line compared &mdash; not just document totals.</p>
         </div>
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9723;</span>
-          <h3>Field-level evidence</h3>
-          <p>Each result traces back to its source field.</p>
-        </div>
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9711;</span>
-          <h3>Human review routing</h3>
-          <p>Low-confidence cases escalate to a person.</p>
-        </div>
-      </div>
-
-      <footer class="rev-foot">
-        <span>AI Document Reconciliation</span>
-        <span>invoices &middot; purchase orders &middot; receipts</span>
-      </footer>
-    </section>
 """.rstrip()
 
 
@@ -1286,64 +1497,183 @@ def _hero_money_row(field: str, invoice_value: Any, po_value: Any, currency: str
     )
 
 
-def _document_panel_stories(
+def _interactive_explorer(
     cases: list[dict[str, Any]],
     reliability_cases: dict[str, dict[str, Any]],
     fixture_index: dict[str, dict[str, Any]],
-    hero_bundle_id: str,
+    default_bundle_id: str,
 ) -> str:
-    remaining = [case for case in cases if case["bundle_id"] != hero_bundle_id]
-    story_cards = "\n".join(
-        _document_story(case, reliability_cases.get(case["bundle_id"], {}), fixture_index, condensed=True)
-        for case in remaining
+    """Render the Slice 10B hero case plus quiet index reviewer.
+
+    Every case is still embedded at generation time. Inline JavaScript only
+    toggles which pre-rendered hero core and detail block is active.
+    """
+    details = "\n".join(
+        _case_detail(case, reliability_cases.get(case["bundle_id"], {}), fixture_index, default_bundle_id)
+        for case in cases
     )
+    quiet_index = _case_index(cases, reliability_cases, default_bundle_id)
     return f"""
-    <section class="story-section" aria-labelledby="document-panel-title">
-      <div class="section-heading">
-        <div>
-          <div class="kicker">Remaining generated cases</div>
-          <h2 id="document-panel-title">Condensed Review Queue</h2>
+    <section class="explorer" data-explorer data-explorer-default="{_e(default_bundle_id)}" aria-labelledby="explorer-title">
+      <div id="interactive-case-explorer">
+{_hero()}
+{_hero_discrepancy_story(cases, reliability_cases, fixture_index, default_bundle_id)}
+      </div>
+      <div class="case-detail-region" aria-labelledby="detail-title">
+        <div class="section-heading">
+          <div>
+            <div class="kicker">Inspect the documents</div>
+            <h2 id="detail-title">Document evidence for the selected case</h2>
+          </div>
+          <p>Raw purchase order, invoice, receipt, detected label, evidence key, confidence, and route remain available below the hero frame.</p>
         </div>
-        <p>All other bundles remain visible with route, confidence, evidence, explanation, and document panels preserved from existing generated outputs.</p>
+{details}
       </div>
-      <div class="story-list">
-{story_cards}
-      </div>
+{quiet_index}
+      <p class="explorer-fallback-note">JavaScript is disabled, so the pre-rendered cases and the native full index remain readable without interaction scripting.</p>
     </section>
 """.rstrip()
+
+
+def _case_detail(
+    case: dict[str, Any],
+    reliability: dict[str, Any],
+    fixture_index: dict[str, dict[str, Any]],
+    default_bundle_id: str,
+) -> str:
+    bundle_id = case["bundle_id"]
+    active = " is-active" if bundle_id == default_bundle_id else ""
+    return f"""
+        <div class="case-detail{active}" data-detail="{_e(bundle_id)}">
+{_document_story(case, reliability, fixture_index)}
+        </div>
+""".rstrip()
+
+
+def _signature_rail(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+    default_bundle_id: str,
+) -> str:
+    buttons = "\n".join(
+        _signature_button(case, title, purpose, reliability_cases.get(case["bundle_id"], {}), default_bundle_id)
+        for case, title, purpose in _signature_cases(cases, reliability_cases)
+    )
+    return f"""
+        <section class="signature-rail" aria-labelledby="signature-title">
+          <div class="signature-rail-header">
+            <div>
+              <div class="kicker">Explore the trust story</div>
+              <h2 id="signature-title" class="condensed-label">Signature cases</h2>
+            </div>
+            <p>Three curated synthetic cases show the full route arc: no over-flag, discrepancy caught, bad data blocked.</p>
+          </div>
+          <div class="signature-options" role="group" aria-label="Signature cases">
+{buttons}
+          </div>
+        </section>
+""".rstrip()
+
+
+def _signature_cases(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+) -> list[tuple[dict[str, Any], str, str]]:
+    selected: list[tuple[dict[str, Any], str, str]] = []
+    definitions = [
+        (_first_case(cases, ["clean_match"]), "Clean match", "does not over-flag"),
+        (_first_case(cases, ["unit_price_mismatch"]), "Unit price mismatch", "catches the discrepancy"),
+        (_first_case(cases, ["schema_validation_failure"]), "Schema validation failure", "blocks bad data"),
+    ]
+    for case, title, purpose in definitions:
+        if case is not None:
+            selected.append((case, title, purpose))
+
+    if len(selected) < 3:
+        for fallback in (
+            _first_route_case(cases, reliability_cases, "auto_accept"),
+            _first_route_case(cases, reliability_cases, "needs_review"),
+            _first_route_case(cases, reliability_cases, "blocked"),
+        ):
+            if fallback is not None and all(item[0]["bundle_id"] != fallback["bundle_id"] for item in selected):
+                selected.append((fallback, _story_title(fallback.get("discrepancy_labels", [])), "route example"))
+            if len(selected) == 3:
+                break
+
+    return selected[:3]
+
+
+def _signature_button(
+    case: dict[str, Any],
+    title: str,
+    purpose: str,
+    reliability: dict[str, Any],
+    default_bundle_id: str,
+) -> str:
+    bundle_id = case["bundle_id"]
+    route = reliability.get("reliability_route", case.get("route", "unknown"))
+    active = " is-active" if bundle_id == default_bundle_id else ""
+    pressed = "true" if active else "false"
+    return f"""            <button type="button" class="signature-case route-{_class_token(route)}{active}" data-case="{_e(bundle_id)}" data-signature-case="{_e(bundle_id)}" aria-pressed="{pressed}">
+              <span class="signature-case-title">{_e(title)}</span>
+              <span class="signature-case-purpose">{_e(purpose)}</span>
+              <span class="pill route-{_class_token(route)}">{_e(route)}</span>
+            </button>""".rstrip()
+
+
+def _case_index(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+    default_bundle_id: str,
+) -> str:
+    entries = "\n".join(
+        _case_index_entry(index, case, reliability_cases.get(case["bundle_id"], {}), default_bundle_id)
+        for index, case in enumerate(cases)
+    )
+    return f"""
+      <details class="case-index" data-case-index>
+        <summary>Browse all {len(cases)} cases</summary>
+        <div class="case-index-list">
+{entries}
+        </div>
+      </details>
+""".rstrip()
+
+
+def _case_index_entry(
+    index: int,
+    case: dict[str, Any],
+    reliability: dict[str, Any],
+    default_bundle_id: str,
+) -> str:
+    bundle_id = case["bundle_id"]
+    route = reliability.get("reliability_route", case.get("route", "unknown"))
+    active = " is-active" if bundle_id == default_bundle_id else ""
+    current = ' aria-current="true"' if active else ""
+    return f"""          <button type="button" class="case-index-button route-{_class_token(route)}{active}" data-case="{_e(bundle_id)}" data-index-case="{_e(bundle_id)}"{current}>
+            <span class="case-index-number">{index + 1:02d}</span>
+            <span>
+              <span class="case-index-title">{_e(_story_title(case.get("discrepancy_labels", [])))}</span>
+              <span class="case-index-meta">{_e(bundle_id)}</span>
+            </span>
+            <span class="pill route-{_class_token(route)}">{_e(route)}</span>
+          </button>""".rstrip()
+
+
+def _chip_label(labels: list[str]) -> str:
+    if not labels or labels == ["clean_match"]:
+        return "clean match"
+    return ", ".join(label.replace("_", " ") for label in labels)
 
 
 def _document_story(
     case: dict[str, Any],
     reliability: dict[str, Any],
     fixture_index: dict[str, dict[str, Any]],
-    condensed: bool = False,
 ) -> str:
     bundle_id = case["bundle_id"]
     labels = case.get("discrepancy_labels", [])
     route = reliability.get("reliability_route", case.get("route", "unknown"))
-    first_evidence = _first_evidence(case)
-    compact_summary = ""
-    if condensed:
-        compact_summary = f"""
-          <div class="condensed-case-grid" data-condensed-case="{_e(bundle_id)}">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">{_e(bundle_id)}</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">{_e(_evidence_summary(first_evidence))}</p>
-              </div>
-              <div class="pills">
-                {_label_pills(labels)}
-                <span class="pill route-{_class_token(route)}">{_e(route)}</span>
-                <span class="pill">confidence {_e(_format_metric(reliability.get("confidence_score")))}</span>
-              </div>
-            </div>
-          </div>
-""".rstrip()
     return f"""
         <article class="story-card" data-curated-case="{_e(bundle_id)}">
           <div class="story-topline">
@@ -1356,7 +1686,6 @@ def _document_story(
               <span class="pill">{_e(_format_metric(reliability.get("confidence_score")))}</span>
             </div>
           </div>
-          {compact_summary}
           <div class="document-grid">
             {_purchase_order_panel(case, fixture_index)}
             {_invoice_panel(case, fixture_index)}
@@ -1365,6 +1694,59 @@ def _document_story(
           {_explanation_block(case, reliability)}
         </article>
 """.rstrip()
+
+
+def _explorer_script() -> str:
+    """Inline, dependency-free selection logic for the reviewer.
+
+    Avoids the ``/``-``/`` comment sequence so the generated HTML stays free of
+    any substring matching the reviewer's no-external-URL guard. It merely
+    toggles which pre-rendered case is visible.
+    """
+    return """
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js-on');
+  var explorer = document.querySelector('[data-explorer]');
+  if (!explorer) { return; }
+  var heroCores = Array.prototype.slice.call(explorer.querySelectorAll('[data-hero-core]'));
+  var details = Array.prototype.slice.call(explorer.querySelectorAll('[data-detail]'));
+  var controls = Array.prototype.slice.call(explorer.querySelectorAll('[data-case]'));
+  var startId = explorer.getAttribute('data-explorer-default');
+  if (!heroCores.length || !details.length || !controls.length) { return; }
+  function matches(element, name, id) {
+    return element.getAttribute(name) === id;
+  }
+  function setActive(id) {
+    heroCores.forEach(function (core) {
+      core.classList.toggle('is-active', matches(core, 'data-hero-core', id));
+    });
+    details.forEach(function (detail) {
+      detail.classList.toggle('is-active', matches(detail, 'data-detail', id));
+    });
+    controls.forEach(function (control) {
+      var active = matches(control, 'data-case', id);
+      control.classList.toggle('is-active', active);
+      if (control.hasAttribute('data-signature-case')) {
+        control.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+      if (control.hasAttribute('data-index-case')) {
+        if (active) {
+          control.setAttribute('aria-current', 'true');
+        } else {
+          control.removeAttribute('aria-current');
+        }
+      }
+    });
+  }
+  controls.forEach(function (control) {
+    control.addEventListener('click', function () {
+      setActive(control.getAttribute('data-case'));
+    });
+  });
+  setActive(startId);
+})();
+""".strip()
 
 
 def _purchase_order_panel(case: dict[str, Any], fixture_index: dict[str, dict[str, Any]]) -> str:
@@ -1646,6 +2028,22 @@ def _eur(amount: Any, currency: str) -> str:
     if symbol:
         return f"{symbol}{formatted}"
     return f"{formatted} {currency}".strip()
+
+
+def _confidence_note(route: str) -> str:
+    if route == "auto_accept":
+        return "above threshold"
+    if route == "blocked":
+        return "blocked route"
+    return "below threshold"
+
+
+def _route_action_label(route: str) -> str:
+    if route == "auto_accept":
+        return "No review needed"
+    if route == "blocked":
+        return "Block for manual review"
+    return "Route to human review"
 
 
 def _line_highlight(case: dict[str, Any], line_id: str) -> bool:

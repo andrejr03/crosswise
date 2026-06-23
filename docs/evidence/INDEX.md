@@ -9,6 +9,8 @@
 - [Slice 7 Local Review Dashboard Static Reviewer Interface](CROSSWISE_SLICE_7_LOCAL_REVIEW_DASHBOARD_STATIC_REVIEWER_INTERFACE_v1.0.md)
 - [Slice 8 README Demo Polish and Fresh-Clone Reproduction Path](CROSSWISE_SLICE_8_README_DEMO_POLISH_AND_FRESH_CLONE_REPRODUCTION_PATH_v1.0.md)
 - [Slice 9 Document-Panel Reconciliation View](CROSSWISE_SLICE_9_DOCUMENT_PANEL_RECONCILIATION_VIEW_v1.0.md)
+- [Slice 10 Interactive Document-Panel Reviewer](CROSSWISE_SLICE_10_INTERACTIVE_DOCUMENT_PANEL_REVIEWER_v1.0.md)
 - [Local Evidence Report](CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md)
 - [Static Reviewer HTML](crosswise_reviewer_v1_0.html)
 - [Reviewer Discrepancy Showcase](CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png)
+- [Reviewer Interactive Showcase](CROSSWISE_REVIEWER_INTERACTIVE_SHOWCASE.png)

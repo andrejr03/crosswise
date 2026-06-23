@@ -67,10 +67,10 @@ h1, h2, h3, p {
 h1 {
   margin-top: 10px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(42px, 7vw, 76px);
+  font-size: 58px;
   font-weight: 500;
   letter-spacing: 0;
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .subtitle {
@@ -249,7 +249,7 @@ h1 {
 
 .section-heading h2 {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: 40px;
   font-weight: 500;
   line-height: 1.05;
 }
@@ -815,6 +815,180 @@ code {
   overflow-x: auto;
 }
 
+/* Interactive case reviewer */
+.explorer {
+  margin-top: 26px;
+}
+
+.hero-core {
+  display: block;
+}
+
+.js-on .hero-core:not(.is-active),
+.js-on .case-detail:not(.is-active) {
+  display: none;
+}
+
+.signature-rail {
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.signature-rail-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 14px;
+}
+
+.signature-rail-header p {
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.signature-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.signature-case,
+.case-index-button {
+  border: 1px solid var(--line);
+  color: var(--soft);
+  cursor: pointer;
+  text-align: left;
+}
+
+.signature-case {
+  display: grid;
+  gap: 7px;
+  min-height: 96px;
+  padding: 16px;
+  background: var(--panel-quiet);
+}
+
+.signature-case:hover,
+.case-index-button:hover {
+  border-color: var(--amber-line);
+  color: var(--ink);
+}
+
+.signature-case.is-active {
+  background: var(--amber-wash);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.signature-case-title,
+.case-index-title {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  line-height: 1.08;
+}
+
+.signature-case.is-active .signature-case-title {
+  color: #f0d187;
+}
+
+.signature-case-purpose,
+.case-index-meta {
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.case-detail-region,
+.case-index {
+  margin-top: 28px;
+}
+
+.case-detail-region {
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.case-detail-region .section-heading {
+  margin-bottom: 14px;
+}
+
+.case-detail {
+  display: block;
+}
+
+.case-detail .story-card {
+  opacity: 0.88;
+}
+
+.case-detail .explanation-block {
+  margin-top: 0;
+}
+
+.case-index {
+  background: transparent;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.case-index summary {
+  padding: 18px 0;
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.case-index-list {
+  display: grid;
+  gap: 8px;
+  padding: 0 0 18px;
+}
+
+.case-index-button {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  background: var(--panel-quiet);
+}
+
+.case-index-button.is-active {
+  border-color: var(--amber);
+  background: var(--amber-wash);
+}
+
+.case-index-number {
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+.case-index-button.is-active .case-index-title,
+.case-index-button.is-active .case-index-number {
+  color: var(--amber);
+}
+
+.explorer-fallback-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.js-on .explorer-fallback-note {
+  display: none;
+}
+
 @media (max-width: 880px) {
   .hero,
   .notice-band,
@@ -825,6 +999,8 @@ code {
   .document-grid,
   .explanation-grid,
   .pipeline ol,
+  .signature-options,
+  .case-index-button,
   .condensed-case {
     grid-template-columns: 1fr;
   }
@@ -836,49 +1012,719 @@ code {
   .hero-note {
     text-align: left;
   }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .section-heading h2 {
+    font-size: 30px;
+  }
 }</style>
 </head>
 <body>
   <main class="shell">
 
+    <section class="explorer" data-explorer data-explorer-default="bundle_unit_price_mismatch_003" aria-labelledby="explorer-title">
+      <div id="interactive-case-explorer">
+
     <section class="hero">
       <div>
         <div class="kicker">Crosswise Reviewer</div>
-        <h1>Crosswise</h1>
-        <p class="subtitle">Static local reviewer for evidence-backed invoice, purchase order, and receipt reconciliation decisions.</p>
+        <h1>Crosswise detected a discrepancy &mdash; and shows you why.</h1>
+        <p class="subtitle">Pick a synthetic case to see the flagged field, the evidence, and the route without changing the underlying reconciliation output.</p>
       </div>
       <p class="hero-note">Synthetic test cases<br>Generated outputs only</p>
     </section>
 
-    <section class="notice-band" aria-label="Scope notices">
-      <div class="notice">
-        <strong>Synthetic-only notice</strong>
-        <p>Uses generated Crosswise fixtures only. No real invoices, real company data, PII, bank details, tax identifiers, payment information, or real supplier data.</p>
-      </div>
-      <div class="notice">
-        <strong>Non-advice notice</strong>
-        <p>Outputs support human review only and are not accounting, tax, legal, financial, payment, compliance, or autonomous-action advice.</p>
-      </div>
-    </section>
-
-    <section class="hero-story" id="document-panel-reconciliation-view" aria-labelledby="hero-story-title" data-hero-case="bundle_unit_price_mismatch_003">
-      <header class="rev-brand">
-        <div class="rev-brand-id">
-          <span class="rev-diamond" aria-hidden="true"></span>
-          <div>
-            <div class="rev-wordmark">Crosswise</div>
-            <div class="rev-tagline">AI Document Reconciliation</div>
+      <section class="hero-story" id="document-panel-reconciliation-view" aria-label="Hero reconciliation case" data-hero-case="bundle_unit_price_mismatch_003">
+        <header class="rev-brand">
+          <div class="rev-brand-id">
+            <span class="rev-diamond" aria-hidden="true"></span>
+            <div>
+              <div class="rev-wordmark">Crosswise</div>
+              <div class="rev-tagline">AI Document Reconciliation</div>
+            </div>
           </div>
-        </div>
-        <div class="rev-build">
-          <span class="rev-build-line"><span class="rev-dot" aria-hidden="true"></span>Dev build</span>
-          <span class="rev-build-sub">synthetic test cases</span>
-        </div>
-      </header>
+          <div class="rev-build">
+            <span class="rev-build-line"><span class="rev-dot" aria-hidden="true"></span>Dev build</span>
+            <span class="rev-build-sub">synthetic test cases</span>
+          </div>
+        </header>
 
+        <div class="hero-core" data-hero-core="bundle_clean_match_001" data-hero-case="bundle_clean_match_001">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0001</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 001</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 001</td>
+              <td class="num">Synthetic Supplier 001</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">8</td>
+              <td class="num">8</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€15.00</td>
+              <td class="num">€15.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€120.00</td>
+              <td class="num">€120.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.980<span>above threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 98%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; No review needed</div>
+          <p>1 discrepancy &middot; evidence linked &middot; auto_accept route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_duplicate_invoice_006" data-hero-case="bundle_duplicate_invoice_006">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0006</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 006</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 006</td>
+              <td class="num">Synthetic Supplier 006</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">9</td>
+              <td class="num">9</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€17.00</td>
+              <td class="num">€17.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€153.00</td>
+              <td class="num">€153.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.650<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 65%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_late_receipt_008" data-hero-case="bundle_late_receipt_008">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0008</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 008</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 008</td>
+              <td class="num">Synthetic Supplier 008</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">8</td>
+              <td class="num">8</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€19.00</td>
+              <td class="num">€19.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€152.00</td>
+              <td class="num">€152.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.830<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 83%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_low_confidence_extraction_009" data-hero-case="bundle_low_confidence_extraction_009">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0009</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 009</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 009</td>
+              <td class="num">Synthetic Supplier 009</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">5</td>
+              <td class="num">5</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€21.00</td>
+              <td class="num">€21.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€105.00</td>
+              <td class="num">€105.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.550<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 55%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_missing_invoice_line_004" data-hero-case="bundle_missing_invoice_line_004">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0004</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 004</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 004</td>
+              <td class="num">Synthetic Supplier 004</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.650<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 65%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_missing_receipt_line_005" data-hero-case="bundle_missing_receipt_line_005">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0005</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 005</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 005</td>
+              <td class="num">Synthetic Supplier 005</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">4</td>
+              <td class="num">4</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€24.00</td>
+              <td class="num">€24.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€96.00</td>
+              <td class="num">€96.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.600<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 60%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_quantity_mismatch_002" data-hero-case="bundle_quantity_mismatch_002">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0002</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 002</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 002</td>
+              <td class="num">Synthetic Supplier 002</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr class="is-disagreement">
+              <td>Quantity</td>
+              <td class="num">6</td>
+              <td class="num">5</td>
+              <td class="num">+1</td>
+              <td class="status status-review">&#9873; review</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€16.00</td>
+              <td class="num">€16.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr class="is-disagreement">
+              <td>Line total</td>
+              <td class="num">€96.00</td>
+              <td class="num">€80.00</td>
+              <td class="num">+€16.00</td>
+              <td class="status status-review">&#9873; review</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.700<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 70%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_schema_validation_failure_010" data-hero-case="bundle_schema_validation_failure_010">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0010</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 010</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td>Vendor</td>
+              <td class="num">Synthetic Supplier 010</td>
+              <td class="num">Synthetic Supplier 010</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">6</td>
+              <td class="num">6</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€21.00</td>
+              <td class="num">€21.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€126.00</td>
+              <td class="num">€126.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.250<span>blocked route</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 25%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Block for manual review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; blocked route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core" data-hero-core="bundle_supplier_alias_mismatch_007" data-hero-case="bundle_supplier_alias_mismatch_007">
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice SYN-INV-0007</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO 007</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="is-disagreement">
+              <td>Vendor</td>
+              <td class="num">Synth Vendor 007</td>
+              <td class="num">Synthetic Supplier 007</td>
+              <td class="num"></td>
+              <td class="status status-review">&#9873; review</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td class="num">6</td>
+              <td class="num">6</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Unit price</td>
+              <td class="num">€21.00</td>
+              <td class="num">€21.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Line total</td>
+              <td class="num">€126.00</td>
+              <td class="num">€126.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+
+            <tr>
+              <td>Tax</td>
+              <td class="num">€0.00</td>
+              <td class="num">€0.00</td>
+              <td class="num">&mdash;</td>
+              <td class="status status-match">&#10003; match</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">0.830<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: 83%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
+        </section>
+      </div>
+        </div>
+
+        <div class="hero-core is-active" data-hero-core="bundle_unit_price_mismatch_003" data-hero-case="bundle_unit_price_mismatch_003">
       <div class="rev-context">
         <span class="rev-context-doc">Invoice SYN-INV-0003</span>
-        <span class="rev-context-mid" id="hero-story-title">&#8644; Matching</span>
+        <span class="rev-context-mid">&#8644; Matching</span>
         <span class="rev-context-doc rev-context-doc-end">PO 003</span>
       </div>
 
@@ -950,83 +1796,46 @@ code {
           <p>1 discrepancy &middot; evidence linked &middot; needs_review route assigned</p>
         </section>
       </div>
+        </div>
 
-      <div class="rev-features">
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9671;</span>
-          <h3>Line-item matching</h3>
-          <p>Every line compared &mdash; not just document totals.</p>
-        </div>
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9723;</span>
-          <h3>Field-level evidence</h3>
-          <p>Each result traces back to its source field.</p>
-        </div>
-        <div class="rev-feature">
-          <span class="rev-glyph" aria-hidden="true">&#9711;</span>
-          <h3>Human review routing</h3>
-          <p>Low-confidence cases escalate to a person.</p>
-        </div>
+        <section class="signature-rail" aria-labelledby="signature-title">
+          <div class="signature-rail-header">
+            <div>
+              <div class="kicker">Explore the trust story</div>
+              <h2 id="signature-title" class="condensed-label">Signature cases</h2>
+            </div>
+            <p>Three curated synthetic cases show the full route arc: no over-flag, discrepancy caught, bad data blocked.</p>
+          </div>
+          <div class="signature-options" role="group" aria-label="Signature cases">
+            <button type="button" class="signature-case route-auto_accept" data-case="bundle_clean_match_001" data-signature-case="bundle_clean_match_001" aria-pressed="false">
+              <span class="signature-case-title">Clean match</span>
+              <span class="signature-case-purpose">does not over-flag</span>
+              <span class="pill route-auto_accept">auto_accept</span>
+            </button>
+            <button type="button" class="signature-case route-needs_review is-active" data-case="bundle_unit_price_mismatch_003" data-signature-case="bundle_unit_price_mismatch_003" aria-pressed="true">
+              <span class="signature-case-title">Unit price mismatch</span>
+              <span class="signature-case-purpose">catches the discrepancy</span>
+              <span class="pill route-needs_review">needs_review</span>
+            </button>
+            <button type="button" class="signature-case route-blocked" data-case="bundle_schema_validation_failure_010" data-signature-case="bundle_schema_validation_failure_010" aria-pressed="false">
+              <span class="signature-case-title">Schema validation failure</span>
+              <span class="signature-case-purpose">blocks bad data</span>
+              <span class="pill route-blocked">blocked</span>
+            </button>
+          </div>
+        </section>
+      </section>
       </div>
-
-      <footer class="rev-foot">
-        <span>AI Document Reconciliation</span>
-        <span>invoices &middot; purchase orders &middot; receipts</span>
-      </footer>
-    </section>
-
-    <section class="summary-strip" aria-label="Evaluation summary and reliability summary">
-      
-          <div class="metric">
-            <span>Overall precision</span>
-            <strong>1.000</strong>
+      <div class="case-detail-region" aria-labelledby="detail-title">
+        <div class="section-heading">
+          <div>
+            <div class="kicker">Inspect the documents</div>
+            <h2 id="detail-title">Document evidence for the selected case</h2>
           </div>
-      
-          <div class="metric">
-            <span>Overall recall</span>
-            <strong>1.000</strong>
-          </div>
-      
-          <div class="metric">
-            <span>Overall F1</span>
-            <strong>1.000</strong>
-          </div>
-      
-          <div class="metric">
-            <span>Macro F1</span>
-            <strong>1.000</strong>
-          </div>
-      
-          <div class="metric">
-            <span>auto_accept count</span>
-            <strong>1</strong>
-          </div>
-      
-          <div class="metric">
-            <span>needs_review count</span>
-            <strong>8</strong>
-          </div>
-      
-          <div class="metric">
-            <span>blocked count</span>
-            <strong>1</strong>
-          </div>
-      
-          <div class="metric">
-            <span>Average confidence</span>
-            <strong>0.674</strong>
-          </div>
-    </section>
-
-    <section class="story-section" aria-labelledby="document-panel-title">
-      <div class="section-heading">
-        <div>
-          <div class="kicker">Remaining generated cases</div>
-          <h2 id="document-panel-title">Condensed Review Queue</h2>
+          <p>Raw purchase order, invoice, receipt, detected label, evidence key, confidence, and route remain available below the hero frame.</p>
         </div>
-        <p>All other bundles remain visible with route, confidence, evidence, explanation, and document panels preserved from existing generated outputs.</p>
-      </div>
-      <div class="story-list">
+
+        <div class="case-detail" data-detail="bundle_clean_match_001">
 
         <article class="story-card" data-curated-case="bundle_clean_match_001">
           <div class="story-topline">
@@ -1037,24 +1846,6 @@ code {
             <div class="pills">
               <span class="pill route-auto_accept">auto_accept</span>
               <span class="pill">0.980</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_clean_match_001">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_clean_match_001</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">Clean deterministic line matches across purchase order, invoice, and receipt.</p>
-              </div>
-              <div class="pills">
-                <span class="pill">clean_match</span>
-                <span class="pill route-auto_accept">auto_accept</span>
-                <span class="pill">confidence 0.980</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -1221,6 +2012,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_duplicate_invoice_006">
 
         <article class="story-card" data-curated-case="bundle_duplicate_invoice_006">
           <div class="story-topline">
@@ -1231,24 +2025,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.650</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_duplicate_invoice_006">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_duplicate_invoice_006</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">duplicate_invoice_number_supplier_date_total: duplicate_of_invoice_id=inv_006_a, invoice_id=inv_006_b, invoice_number=SYN-INV-0006, original_invoice_id=inv_006_a, total_amount=203.00</p>
-              </div>
-              <div class="pills">
-                <span class="pill">duplicate_invoice</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.650</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -1461,6 +2237,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_late_receipt_008">
 
         <article class="story-card" data-curated-case="bundle_late_receipt_008">
           <div class="story-topline">
@@ -1471,24 +2250,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.830</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_late_receipt_008">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_late_receipt_008</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">receipt_date_after_expected_receipt_date: expected_receipt_date=2026-01-24, receipt_date=2026-01-28</p>
-              </div>
-              <div class="pills">
-                <span class="pill">late_receipt</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.830</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -1655,6 +2416,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_low_confidence_extraction_009">
 
         <article class="story-card" data-curated-case="bundle_low_confidence_extraction_009">
           <div class="story-topline">
@@ -1665,24 +2429,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.550</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_low_confidence_extraction_009">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_low_confidence_extraction_009</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">simulated_extraction_issue_from_ground_truth: expected_route=needs_review, field_name=unit_price, issue_type=low_confidence_extraction, source_document_id=inv_009_a</p>
-              </div>
-              <div class="pills">
-                <span class="pill">low_confidence_extraction</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.550</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -1849,6 +2595,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_missing_invoice_line_004">
 
         <article class="story-card" data-curated-case="bundle_missing_invoice_line_004">
           <div class="story-topline">
@@ -1859,24 +2608,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.650</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_missing_invoice_line_004">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_missing_invoice_line_004</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">no_invoice_line_for_po_sku: invoice_line_id=None, po_line_sku_id=sku_004_b</p>
-              </div>
-              <div class="pills">
-                <span class="pill">missing_invoice_line</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.650</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -2036,6 +2767,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_missing_receipt_line_005">
 
         <article class="story-card" data-curated-case="bundle_missing_receipt_line_005">
           <div class="story-topline">
@@ -2046,24 +2780,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.600</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_missing_receipt_line_005">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_missing_receipt_line_005</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">no_receipt_line_for_po_sku: po_line_sku_id=sku_005_b, receipt_line_id=None</p>
-              </div>
-              <div class="pills">
-                <span class="pill">missing_receipt_line</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.600</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -2223,6 +2939,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_quantity_mismatch_002">
 
         <article class="story-card" data-curated-case="bundle_quantity_mismatch_002">
           <div class="story-topline">
@@ -2233,24 +2952,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.700</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_quantity_mismatch_002">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_quantity_mismatch_002</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">ordered_billed_received_quantity_difference: quantity_billed=6, quantity_ordered=5, quantity_received=5</p>
-              </div>
-              <div class="pills">
-                <span class="pill">quantity_mismatch</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.700</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -2417,6 +3118,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_schema_validation_failure_010">
 
         <article class="story-card" data-curated-case="bundle_schema_validation_failure_010">
           <div class="story-topline">
@@ -2427,24 +3131,6 @@ code {
             <div class="pills">
               <span class="pill route-blocked">blocked</span>
               <span class="pill">0.250</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_schema_validation_failure_010">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_schema_validation_failure_010</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">simulated_extraction_issue_from_ground_truth: expected_route=blocked, field_name=invoice_number, issue_type=schema_validation_failure, source_document_id=inv_010_a</p>
-              </div>
-              <div class="pills">
-                <span class="pill">schema_validation_failure</span>
-                <span class="pill route-blocked">blocked</span>
-                <span class="pill">confidence 0.250</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -2611,6 +3297,9 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail" data-detail="bundle_supplier_alias_mismatch_007">
 
         <article class="story-card" data-curated-case="bundle_supplier_alias_mismatch_007">
           <div class="story-topline">
@@ -2621,24 +3310,6 @@ code {
             <div class="pills">
               <span class="pill route-needs_review">needs_review</span>
               <span class="pill">0.830</span>
-            </div>
-          </div>
-          
-          <div class="condensed-case-grid" data-condensed-case="bundle_supplier_alias_mismatch_007">
-            <div class="condensed-case">
-              <div>
-                <div class="condensed-label">Bundle</div>
-                <p class="bundle">bundle_supplier_alias_mismatch_007</p>
-              </div>
-              <div>
-                <div class="condensed-label">Evidence</div>
-                <p class="condensed-evidence">supplier_id_exact_with_known_alias: canonical_name=Synthetic Supplier 007, supplier_name_raw=Synth Vendor 007</p>
-              </div>
-              <div class="pills">
-                <span class="pill">supplier_alias_mismatch</span>
-                <span class="pill route-needs_review">needs_review</span>
-                <span class="pill">confidence 0.830</span>
-              </div>
             </div>
           </div>
           <div class="document-grid">
@@ -2805,6 +3476,351 @@ code {
             </div>
           </section>
         </article>
+        </div>
+
+        <div class="case-detail is-active" data-detail="bundle_unit_price_mismatch_003">
+
+        <article class="story-card" data-curated-case="bundle_unit_price_mismatch_003">
+          <div class="story-topline">
+            <div class="story-title">
+              <h3>Unit Price Mismatch</h3>
+              <p class="bundle">bundle_unit_price_mismatch_003</p>
+            </div>
+            <div class="pills">
+              <span class="pill route-needs_review">needs_review</span>
+              <span class="pill">0.700</span>
+            </div>
+          </div>
+          <div class="document-grid">
+            
+            <section class="doc-panel" data-document-panel="Purchase Order">
+              <h4>Purchase Order</h4>
+              <p class="doc-id">po_003</p>
+              <div class="doc-meta">
+                
+                  <div class="meta-row">
+                    <span>Supplier</span>
+                    <span><span>Synthetic Supplier 003</span></span>
+                  </div>
+                
+                  <div class="meta-row">
+                    <span>Date</span>
+                    <span><span>2026-01-12</span></span>
+                  </div>
+                
+                  <div class="meta-row">
+                    <span>Expected</span>
+                    <span><span>2026-01-19</span></span>
+                  </div>
+                
+                  <div class="meta-row">
+                    <span>Total</span>
+                    <span><span>169.00 EUR</span></span>
+                  </div>
+              </div>
+              
+              <table class="mini-table">
+                <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
+                <tbody>
+
+                  <tr class="line-highlight">
+                    <td>Synthetic Item 003 Alpha</td>
+                    <td><span>5</span></td>
+                    <td><span class="field-highlight">13.00</span></td>
+                    <td>65.00</td>
+                  </tr>
+
+                  <tr>
+                    <td>Synthetic Item 003 Beta</td>
+                    <td><span>4</span></td>
+                    <td><span>26.00</span></td>
+                    <td>104.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            
+            <section class="doc-panel" data-document-panel="Invoice">
+              <h4>Invoice</h4>
+
+              <div class="sub-document">
+                <p class="doc-id"><span>inv_003_a</span></p>
+                <div class="doc-meta">
+                  
+                  <div class="meta-row">
+                    <span>Supplier</span>
+                    <span><span>Synthetic Supplier 003</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>Number</span>
+                    <span><span>SYN-INV-0003</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>Date</span>
+                    <span><span>2026-01-13</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>Total</span>
+                    <span><span>179.00 EUR</span></span>
+                  </div>
+                </div>
+                
+              <table class="mini-table">
+                <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
+                <tbody>
+
+                  <tr class="line-highlight">
+                    <td>Synthetic Item 003 Alpha</td>
+                    <td><span>5</span></td>
+                    <td><span class="field-highlight">15.00</span></td>
+                    <td>75.00</td>
+                  </tr>
+
+                  <tr>
+                    <td>Synthetic Item 003 Beta</td>
+                    <td><span>4</span></td>
+                    <td><span>26.00</span></td>
+                    <td>104.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </section>
+            
+            <section class="doc-panel" data-document-panel="Receipt">
+              <h4>Receipt</h4>
+
+              <div class="sub-document">
+                <p class="doc-id">rcpt_003</p>
+                <div class="doc-meta">
+                  
+                  <div class="meta-row">
+                    <span>Supplier</span>
+                    <span><span>Synthetic Supplier 003</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>Number</span>
+                    <span><span>SYN-RCPT-0003</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>Date</span>
+                    <span><span>2026-01-17</span></span>
+                  </div>
+                  
+                  <div class="meta-row">
+                    <span>PO</span>
+                    <span><span>po_003</span></span>
+                  </div>
+                </div>
+                
+              <table class="mini-table">
+                <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Received</th></tr></thead>
+                <tbody>
+
+                  <tr>
+                    <td>Synthetic Item 003 Alpha</td>
+                    <td><span>5</span></td>
+                    <td><span>each</span></td>
+                    <td>2026-01-17</td>
+                  </tr>
+
+                  <tr>
+                    <td>Synthetic Item 003 Beta</td>
+                    <td><span>4</span></td>
+                    <td><span>each</span></td>
+                    <td>2026-01-17</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            </section>
+          </div>
+          
+          <section class="explanation-block" data-explanation-block="bundle_unit_price_mismatch_003">
+            <div class="pills">
+              <span class="pill">unit_price_mismatch</span>
+              <span class="pill route-needs_review">needs_review</span>
+              <span class="pill">confidence 0.700</span>
+            </div>
+            <div class="explanation-grid">
+              <p class="answer"><strong>What happened?</strong>Unit Price Mismatch</p>
+              <p class="answer"><strong>Why flagged?</strong>Invoice unit price differs from purchase order unit price.</p>
+              <p class="answer"><strong>Evidence</strong>purchase_order_invoice_unit_price_difference: invoice_unit_price=15.00, po_unit_price=13.00</p>
+              <p class="answer"><strong>Route assigned</strong>needs_review for local human-review workflow support.</p>
+            </div>
+          </section>
+        </article>
+        </div>
+      </div>
+
+      <details class="case-index" data-case-index>
+        <summary>Browse all 10 cases</summary>
+        <div class="case-index-list">
+          <button type="button" class="case-index-button route-auto_accept" data-case="bundle_clean_match_001" data-index-case="bundle_clean_match_001">
+            <span class="case-index-number">01</span>
+            <span>
+              <span class="case-index-title">Clean match across PO, invoice, and receipt</span>
+              <span class="case-index-meta">bundle_clean_match_001</span>
+            </span>
+            <span class="pill route-auto_accept">auto_accept</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_duplicate_invoice_006" data-index-case="bundle_duplicate_invoice_006">
+            <span class="case-index-number">02</span>
+            <span>
+              <span class="case-index-title">Duplicate Invoice</span>
+              <span class="case-index-meta">bundle_duplicate_invoice_006</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_late_receipt_008" data-index-case="bundle_late_receipt_008">
+            <span class="case-index-number">03</span>
+            <span>
+              <span class="case-index-title">Late Receipt</span>
+              <span class="case-index-meta">bundle_late_receipt_008</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_low_confidence_extraction_009" data-index-case="bundle_low_confidence_extraction_009">
+            <span class="case-index-number">04</span>
+            <span>
+              <span class="case-index-title">Low Confidence Extraction</span>
+              <span class="case-index-meta">bundle_low_confidence_extraction_009</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_missing_invoice_line_004" data-index-case="bundle_missing_invoice_line_004">
+            <span class="case-index-number">05</span>
+            <span>
+              <span class="case-index-title">Missing Invoice Line</span>
+              <span class="case-index-meta">bundle_missing_invoice_line_004</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_missing_receipt_line_005" data-index-case="bundle_missing_receipt_line_005">
+            <span class="case-index-number">06</span>
+            <span>
+              <span class="case-index-title">Missing Receipt Line</span>
+              <span class="case-index-meta">bundle_missing_receipt_line_005</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_quantity_mismatch_002" data-index-case="bundle_quantity_mismatch_002">
+            <span class="case-index-number">07</span>
+            <span>
+              <span class="case-index-title">Quantity Mismatch</span>
+              <span class="case-index-meta">bundle_quantity_mismatch_002</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-blocked" data-case="bundle_schema_validation_failure_010" data-index-case="bundle_schema_validation_failure_010">
+            <span class="case-index-number">08</span>
+            <span>
+              <span class="case-index-title">Schema Validation Failure</span>
+              <span class="case-index-meta">bundle_schema_validation_failure_010</span>
+            </span>
+            <span class="pill route-blocked">blocked</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review" data-case="bundle_supplier_alias_mismatch_007" data-index-case="bundle_supplier_alias_mismatch_007">
+            <span class="case-index-number">09</span>
+            <span>
+              <span class="case-index-title">Supplier Alias Mismatch</span>
+              <span class="case-index-meta">bundle_supplier_alias_mismatch_007</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+          <button type="button" class="case-index-button route-needs_review is-active" data-case="bundle_unit_price_mismatch_003" data-index-case="bundle_unit_price_mismatch_003" aria-current="true">
+            <span class="case-index-number">10</span>
+            <span>
+              <span class="case-index-title">Unit Price Mismatch</span>
+              <span class="case-index-meta">bundle_unit_price_mismatch_003</span>
+            </span>
+            <span class="pill route-needs_review">needs_review</span>
+          </button>
+        </div>
+      </details>
+      <p class="explorer-fallback-note">JavaScript is disabled, so the pre-rendered cases and the native full index remain readable without interaction scripting.</p>
+    </section>
+
+    <section class="summary-strip" aria-label="Evaluation summary and reliability summary">
+      
+          <div class="metric">
+            <span>Overall precision</span>
+            <strong>1.000</strong>
+          </div>
+      
+          <div class="metric">
+            <span>Overall recall</span>
+            <strong>1.000</strong>
+          </div>
+      
+          <div class="metric">
+            <span>Overall F1</span>
+            <strong>1.000</strong>
+          </div>
+      
+          <div class="metric">
+            <span>Macro F1</span>
+            <strong>1.000</strong>
+          </div>
+      
+          <div class="metric">
+            <span>auto_accept count</span>
+            <strong>1</strong>
+          </div>
+      
+          <div class="metric">
+            <span>needs_review count</span>
+            <strong>8</strong>
+          </div>
+      
+          <div class="metric">
+            <span>blocked count</span>
+            <strong>1</strong>
+          </div>
+      
+          <div class="metric">
+            <span>Average confidence</span>
+            <strong>0.674</strong>
+          </div>
+    </section>
+
+    <section class="reviewer-pillars" aria-label="Reviewer pillars">
+      <div class="rev-features">
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9671;</span>
+          <h3>Line-item matching</h3>
+          <p>Every line compared &mdash; not just document totals.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9723;</span>
+          <h3>Field-level evidence</h3>
+          <p>Each result traces back to its source field.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9711;</span>
+          <h3>Human review routing</h3>
+          <p>Low-confidence cases escalate to a person.</p>
+        </div>
+      </div>
+      <footer class="rev-foot">
+        <span>AI Document Reconciliation</span>
+        <span>invoices &middot; purchase orders &middot; receipts</span>
+      </footer>
+    </section>
+
+    <section class="notice-band" aria-label="Scope notices">
+      <div class="notice">
+        <strong>Synthetic-only notice</strong>
+        <p>Uses generated Crosswise fixtures only. No real invoices, real company data, PII, bank details, tax identifiers, payment information, or real supplier data.</p>
+      </div>
+      <div class="notice">
+        <strong>Non-advice notice</strong>
+        <p>Outputs support human review only and are not accounting, tax, legal, financial, payment, compliance, or autonomous-action advice.</p>
       </div>
     </section>
 
@@ -2833,5 +3849,47 @@ code {
       </ul>
     </section>
   </main>
+  <script>(function () {
+  var root = document.documentElement;
+  root.classList.add('js-on');
+  var explorer = document.querySelector('[data-explorer]');
+  if (!explorer) { return; }
+  var heroCores = Array.prototype.slice.call(explorer.querySelectorAll('[data-hero-core]'));
+  var details = Array.prototype.slice.call(explorer.querySelectorAll('[data-detail]'));
+  var controls = Array.prototype.slice.call(explorer.querySelectorAll('[data-case]'));
+  var startId = explorer.getAttribute('data-explorer-default');
+  if (!heroCores.length || !details.length || !controls.length) { return; }
+  function matches(element, name, id) {
+    return element.getAttribute(name) === id;
+  }
+  function setActive(id) {
+    heroCores.forEach(function (core) {
+      core.classList.toggle('is-active', matches(core, 'data-hero-core', id));
+    });
+    details.forEach(function (detail) {
+      detail.classList.toggle('is-active', matches(detail, 'data-detail', id));
+    });
+    controls.forEach(function (control) {
+      var active = matches(control, 'data-case', id);
+      control.classList.toggle('is-active', active);
+      if (control.hasAttribute('data-signature-case')) {
+        control.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+      if (control.hasAttribute('data-index-case')) {
+        if (active) {
+          control.setAttribute('aria-current', 'true');
+        } else {
+          control.removeAttribute('aria-current');
+        }
+      }
+    });
+  }
+  controls.forEach(function (control) {
+    control.addEventListener('click', function () {
+      setActive(control.getAttribute('data-case'));
+    });
+  });
+  setActive(startId);
+})();</script>
 </body>
 </html>
