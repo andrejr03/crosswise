@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crosswise Synthetic Goods Receipt - SYN-RCPT-0003</title>
+  <style>:root {
+  --page: #171511;
+  --paper: #eee8dd;
+  --paper-warm: #e5d9c5;
+  --ink: #211e19;
+  --muted: #726a5d;
+  --soft: #9c907e;
+  --panel: #211e19;
+  --line: #cdbf9f;
+  --line-strong: #8b7854;
+  --amber: #c9a24b;
+  --amber-soft: rgba(201, 162, 75, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(201, 162, 75, 0.08), transparent 32%),
+    var(--page);
+  color: var(--ink);
+  font-family: "Avenir Next", Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
+  line-height: 1.5;
+}
+
+.document-page {
+  width: min(980px, calc(100% - 36px));
+  margin: 38px auto;
+  padding: 54px 58px 42px;
+  background:
+    linear-gradient(90deg, rgba(33, 30, 25, 0.055) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, rgba(201, 162, 75, 0.10), transparent 210px),
+    var(--paper);
+  border: 1px solid rgba(201, 162, 75, 0.42);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+}
+
+.masthead,
+.identity-strip,
+.section-rule,
+.total-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.masthead {
+  padding-bottom: 34px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.kicker,
+.label,
+.meta-card span,
+.section-rule,
+.line-table th,
+.caption strong {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.kicker,
+.section-rule,
+.caption strong {
+  color: var(--amber);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  margin-top: 8px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 64px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.95;
+}
+
+h2 {
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 31px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  transform: rotate(45deg);
+  border: 2px solid var(--amber);
+  box-shadow: 11px 11px 0 rgba(201, 162, 75, 0.12);
+}
+
+.identity-strip {
+  margin-top: 28px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.identity-strip div:last-child {
+  text-align: right;
+}
+
+.label,
+.meta-card span {
+  display: block;
+  color: var(--soft);
+}
+
+.identity-strip strong,
+.meta-card strong,
+.total-row strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 30px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.meta-card {
+  min-height: 92px;
+  padding: 17px 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.party-block {
+  margin-top: 34px;
+  padding: 28px 30px;
+  background: rgba(33, 30, 25, 0.045);
+  border-left: 5px solid var(--amber);
+}
+
+.party-block p {
+  max-width: 560px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.lines-section {
+  margin-top: 38px;
+}
+
+.section-rule {
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.section-rule::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--line);
+}
+
+.line-table {
+  width: 100%;
+  margin-top: 18px;
+  border-collapse: collapse;
+}
+
+.line-table th {
+  padding: 0 12px 11px;
+  color: var(--soft);
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.line-table td {
+  padding: 17px 12px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 15px;
+  vertical-align: top;
+}
+
+.line-table th:first-child,
+.line-table td:first-child {
+  width: 58px;
+  padding-left: 0;
+  color: var(--amber);
+  font-family: Menlo, Consolas, monospace;
+}
+
+.line-table th:nth-last-child(-n + 2),
+.line-table td:nth-last-child(-n + 2) {
+  text-align: right;
+}
+
+.money {
+  white-space: nowrap;
+  font-family: Menlo, Consolas, monospace;
+}
+
+.money span {
+  color: var(--soft);
+}
+
+.totals-block {
+  width: min(360px, 100%);
+  margin: 30px 0 0 auto;
+  border-top: 2px solid var(--ink);
+}
+
+.total-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.total-row span {
+  color: var(--muted);
+}
+
+.total-row:last-child strong {
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.caption {
+  margin-top: 44px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.caption p {
+  max-width: 820px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .document-page {
+    width: min(100% - 20px, 980px);
+    margin: 10px auto;
+    padding: 30px 20px;
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .masthead,
+  .identity-strip {
+    display: grid;
+  }
+
+  .identity-strip div:last-child {
+    text-align: left;
+  }
+
+  .meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lines-section {
+    overflow-x: auto;
+  }
+
+  .line-table {
+    min-width: 680px;
+  }
+}</style>
+</head>
+<body>
+  <main class="document-page">
+    <header class="masthead">
+      <div>
+        <div class="kicker">Crosswise synthetic source record</div>
+        <h1>Goods Receipt</h1>
+      </div>
+      <div class="brand-mark" aria-hidden="true"></div>
+    </header>
+    <section class="identity-strip" aria-label="Document identity">
+      <div>
+        <span class="label">Document ID</span>
+        <strong>SYN-RCPT-0003</strong>
+      </div>
+      <div>
+        <span class="label">Record note</span>
+        <strong>Generated source record render</strong>
+      </div>
+    </section>
+        <section class="meta-grid" aria-label="Document metadata">
+      <div class="meta-card">
+        <span>Receipt number</span>
+        <strong>SYN-RCPT-0003</strong>
+      </div>
+      <div class="meta-card">
+        <span>Receipt date</span>
+        <strong>2026-01-17</strong>
+      </div>
+      <div class="meta-card">
+        <span>Related PO</span>
+        <strong>po_003</strong>
+      </div>
+    </section>
+    <section class="party-block" aria-label="Document party">
+      <div>
+        <span class="label">Supplier</span>
+        <h2>Synthetic Supplier 003</h2>
+        <p>Raw supplier name shown on the synthetic receipt record</p>
+      </div>
+    </section>
+    <section class="lines-section" aria-label="Line items">
+      <div class="section-rule">
+        <span>Line items</span>
+      </div>
+            <table class="line-table">
+        <thead><tr><th>Line</th><th>SKU</th><th>Qty received</th><th>Unit</th><th>Received date</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Synthetic Item 003 Alpha</td><td>5</td><td>each</td><td>2026-01-17</td></tr>
+          <tr><td>2</td><td>Synthetic Item 003 Beta</td><td>4</td><td>each</td><td>2026-01-17</td></tr>
+        </tbody>
+      </table>
+    </section>
+        <section class="totals-block" aria-label="Document totals">
+      <div class="total-row"><span>Receipt lines</span><strong>2</strong></div>
+      <div class="total-row"><span>Related PO</span><strong>po_003</strong></div>
+    </section>
+    <footer class="caption">
+      <strong>Synthetic document notice</strong>
+      <p>This is a synthetic, illustrative render of a generated Crosswise source record. It is not a real document and contains no real company, supplier, payment, tax, or bank data. It is not parsed, ingested, or read back by Crosswise; there is no OCR. Crosswise output is not accounting, tax, legal, financial, payment, or compliance advice.</p>
+    </footer>
+  </main>
+</body>
+</html>
