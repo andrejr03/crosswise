@@ -20,6 +20,15 @@ REQUIRED_OUTPUT_PATHS = {
     "reliability": Path("data/reliability/reliability_v1_0.json"),
 }
 DEFAULT_OUTPUT_PATH = Path("docs/evidence/crosswise_reviewer_v1_0.html")
+SCREENSHOT_OUTPUT_PATH = Path("docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png")
+CURATED_STORY_LABELS = [
+    ["clean_match"],
+    ["quantity_mismatch"],
+    ["unit_price_mismatch"],
+    ["supplier_alias_mismatch"],
+    ["duplicate_invoice"],
+    ["low_confidence_extraction"],
+]
 
 
 def load_required_outputs(repo_root: Path) -> dict[str, Any]:
@@ -48,6 +57,23 @@ def generate_static_reviewer(repo_root: Path, output_path: Path | None = None) -
     return write_static_reviewer(payloads, target)
 
 
+def generate_reviewer_screenshot(
+    html_path: Path,
+    screenshot_path: Path,
+    selector: str = "#document-panel-reconciliation-view",
+) -> Path:
+    from playwright.sync_api import sync_playwright
+
+    screenshot_path.parent.mkdir(parents=True, exist_ok=True)
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page(viewport={"width": 1500, "height": 1200}, device_scale_factor=1)
+        page.goto(html_path.resolve().as_uri())
+        page.locator(selector).screenshot(path=str(screenshot_path))
+        browser.close()
+    return screenshot_path
+
+
 def write_static_reviewer(payloads: dict[str, Any], output_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(render_static_reviewer(payloads), encoding="utf-8")
@@ -55,14 +81,17 @@ def write_static_reviewer(payloads: dict[str, Any], output_path: Path) -> Path:
 
 
 def render_static_reviewer(payloads: dict[str, Any]) -> str:
+    fixtures = payloads["fixtures"]
     reconciliation = payloads["reconciliation"]
     evaluation = payloads["evaluation"]
     reliability = payloads["reliability"]
+    fixture_index = _fixture_index(fixtures)
     cases = sorted(reconciliation.get("cases", []), key=lambda item: item["bundle_id"])
     reliability_cases = {
         case["bundle_id"]: case
         for case in sorted(reliability.get("cases", []), key=lambda item: item["bundle_id"])
     }
+    hero_case = _select_hero_case(cases, reliability_cases)
 
     return "\n".join(
         [
@@ -78,10 +107,10 @@ def render_static_reviewer(payloads: dict[str, Any]) -> str:
             '  <main class="shell">',
             _hero(),
             _notice_band(),
-            _pipeline_summary(),
+            _hero_discrepancy_story(hero_case, reliability_cases.get(hero_case["bundle_id"], {}), fixture_index),
             _metric_sections(evaluation, reliability),
-            _example_cards(cases, reliability_cases),
-            _case_table(cases, reliability_cases),
+            _document_panel_stories(cases, reliability_cases, fixture_index, hero_case["bundle_id"]),
+            _pipeline_summary(),
             _reproduction_commands(),
             "  </main>",
             "</body>",
@@ -94,17 +123,21 @@ def render_static_reviewer(payloads: dict[str, Any]) -> str:
 def _css() -> str:
     return """
 :root {
-  --ink: #f4efe6;
-  --muted: #bdb1a1;
-  --paper: #211f1b;
-  --panel: #2a2721;
-  --panel-strong: #332f27;
-  --line: #514838;
-  --amber: #d8a441;
-  --amber-soft: #5c4724;
-  --ok: #9eb77e;
-  --review: #d8a441;
-  --blocked: #d47663;
+  --page: #171511;
+  --ink: #eee8dd;
+  --muted: #928a7d;
+  --soft: #c8bdad;
+  --panel: #211e19;
+  --panel-raised: #28231c;
+  --panel-quiet: #1c1915;
+  --line: #373126;
+  --line-soft: #2a261f;
+  --amber: #c9a24b;
+  --amber-strong: #e0aa4b;
+  --amber-wash: rgba(201, 162, 75, 0.12);
+  --amber-line: rgba(201, 162, 75, 0.36);
+  --ok: #7da069;
+  --blocked: #c47a5e;
 }
 
 * {
@@ -114,32 +147,34 @@ def _css() -> str:
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--paper);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(201, 162, 75, 0.07), transparent 34%),
+    var(--page);
   color: var(--ink);
-  font-family: Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
+  font-family: "Avenir Next", Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
   line-height: 1.5;
 }
 
 .shell {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 34px 0 48px;
+  padding: 54px 0 58px;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
-  gap: 24px;
-  align-items: end;
-  padding: 28px 0 22px;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: start;
+  padding: 26px 0 46px;
 }
 
 .kicker {
   color: var(--amber);
-  font-size: 12px;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
 }
 
@@ -148,72 +183,94 @@ h1, h2, h3, p {
 }
 
 h1 {
-  margin-top: 8px;
+  margin-top: 10px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(42px, 8vw, 84px);
+  font-size: clamp(42px, 7vw, 76px);
   font-weight: 500;
-  line-height: 0.95;
+  letter-spacing: 0;
+  line-height: 0.98;
 }
 
 .subtitle {
-  margin-top: 14px;
+  max-width: 620px;
+  margin-top: 18px;
   color: var(--muted);
   font-size: 18px;
 }
 
 .hero-note {
   color: var(--muted);
-  border-left: 3px solid var(--amber);
-  padding: 2px 0 2px 16px;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-align: right;
+  text-transform: uppercase;
 }
 
 .notice-band,
-.summary-grid,
-.example-grid,
-.case-section,
+.story-section,
+.hero-story,
 .command-section {
-  margin-top: 22px;
+  margin-top: 26px;
 }
 
 .notice-band {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  margin-top: 0;
+  padding: 16px 0 20px;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .notice,
-.panel,
-.example-card,
-.case-section,
+.metric,
+.hero-confidence,
+.hero-action,
+.story-card,
+.doc-panel,
 .command-section {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 8px;
 }
 
 .notice {
-  padding: 16px;
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
 }
 
 .notice strong {
   display: block;
+  font-family: Menlo, Consolas, monospace;
   color: var(--amber);
-  margin-bottom: 5px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.notice p {
+  max-width: 460px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .pipeline {
-  margin-top: 22px;
-  padding: 18px 0;
+  margin-top: 46px;
+  padding: 20px 0 0;
   border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
 }
 
 .pipeline h2,
-.case-section h2,
 .command-section h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .pipeline ol {
@@ -227,12 +284,12 @@ h1 {
 }
 
 .pipeline li {
-  min-height: 92px;
-  padding: 12px;
-  background: var(--panel-strong);
+  min-height: 72px;
+  padding: 12px 10px;
+  background: transparent;
   border: 1px solid var(--line);
-  border-radius: 8px;
   color: var(--muted);
+  font-size: 13px;
   counter-increment: step;
 }
 
@@ -240,67 +297,536 @@ h1 {
   content: counter(step, decimal-leading-zero);
   display: block;
   color: var(--amber);
+  font-family: Menlo, Consolas, monospace;
   font-size: 12px;
   font-weight: 700;
   margin-bottom: 8px;
 }
 
-.summary-grid {
+.summary-strip {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.panel {
-  padding: 18px;
-}
-
-.panel h2 {
-  font-size: 18px;
-  margin-bottom: 14px;
-}
-
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 32px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .metric {
-  padding: 14px;
-  background: #1c1a17;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  min-height: 94px;
+  padding: 16px 14px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--line);
 }
 
-.metric span {
+.metric:last-child {
+  border-right: 0;
+}
+
+.metric span,
+.doc-panel h4,
+.answer strong,
+.condensed-label {
   display: block;
+}
+
+.metric span,
+.comparison-table th,
+.mini-table th,
+.doc-panel h4,
+.answer strong,
+.condensed-label {
+  font-family: Menlo, Consolas, monospace;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .metric strong {
   display: block;
-  margin-top: 4px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 30px;
+  margin-top: 10px;
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 24px;
   font-weight: 500;
 }
 
-.example-grid {
+.story-section {
+  padding: 12px 0 4px;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.section-heading p {
+  color: var(--muted);
+}
+
+.story-list {
+  display: grid;
+  gap: 14px;
+}
+
+.hero-story {
+  padding: 54px 56px 44px;
+  background: var(--page);
+  border: 1px solid var(--line-soft);
+}
+
+/* Brand row */
+.rev-brand {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.rev-brand-id {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.rev-diamond {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--amber);
+}
+
+.rev-wordmark {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.rev-tagline {
+  margin-top: 7px;
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.rev-build {
+  text-align: right;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.rev-build-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--amber);
+}
+
+.rev-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+.rev-build-sub {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+}
+
+/* Document context line */
+.rev-context {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  margin-top: 56px;
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.rev-context-doc-end {
+  text-align: right;
+}
+
+.rev-context-mid {
+  color: var(--amber);
+  text-align: center;
+}
+
+/* Comparison table */
+.comparison-wrap {
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  overflow-x: auto;
+}
+
+.comparison-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+.comparison-table th {
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.comparison-table td {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 15px;
+  text-align: left;
+}
+
+.comparison-table th.num,
+.comparison-table td.num {
+  text-align: right;
+}
+
+.comparison-table th.status,
+.comparison-table td.status {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.comparison-table td:first-child {
+  color: var(--ink);
+  font-family: "Avenir Next", Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
+  font-size: 17px;
+}
+
+.comparison-table tr.is-disagreement {
+  background: var(--amber-wash);
+}
+
+.comparison-table tr.is-disagreement td,
+.comparison-table tr.is-disagreement td:first-child {
+  color: #f0d187;
+}
+
+.status {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.status-review {
+  color: var(--amber);
+}
+
+.status-match {
+  color: var(--muted);
+}
+
+/* Decision row: confidence + action */
+.rev-decision {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.hero-confidence,
+.hero-action {
+  padding: 26px 28px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.confidence-number {
+  margin-top: 16px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.confidence-number span {
+  margin-left: 12px;
+  color: var(--amber);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.confidence-track {
+  height: 6px;
+  margin-top: 24px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+
+.confidence-fill {
+  display: block;
+  height: 100%;
+  background: var(--amber);
+}
+
+.action-button {
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 14px 22px;
+  background: var(--amber-strong);
+  color: #171511;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hero-action p {
+  margin-top: 18px;
+  color: var(--muted);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* Feature row */
+.rev-features {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 28px;
+  margin-top: 56px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line-soft);
 }
 
-.example-card {
-  padding: 18px;
-}
-
-.example-card h3 {
-  font-size: 15px;
+.rev-glyph {
+  display: block;
+  margin-bottom: 18px;
   color: var(--amber);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.rev-feature h3 {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.rev-feature p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Footer */
+.rev-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 54px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+}
+
+.rev-foot span:first-child {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+}
+
+.rev-foot span:last-child {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.story-card {
+  padding: 0;
+  background: transparent;
+  border-color: var(--line-soft);
+}
+
+.story-topline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
+  gap: 20px;
+  align-items: start;
+  padding: 18px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.story-title {
+  display: grid;
+  gap: 4px;
+}
+
+.story-title h3 {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+  padding: 14px;
+}
+
+.doc-panel {
+  padding: 16px;
+  background: var(--panel-raised);
+  border-color: var(--line-soft);
+}
+
+.doc-panel h4 {
+  margin: 0 0 10px;
+  color: var(--amber);
+}
+
+.doc-id {
   margin-bottom: 10px;
+  color: var(--ink);
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.doc-meta {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.meta-row span:first-child {
+  color: var(--muted);
+}
+
+.sub-document {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.sub-document:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.mini-table {
+  width: 100%;
+  min-width: 0;
+  border-collapse: collapse;
+}
+
+.mini-table th,
+.mini-table td {
+  padding: 7px 6px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 12px;
+  text-align: left;
+}
+
+.mini-table th {
+  color: var(--muted);
+}
+
+.mini-table td:first-child,
+.mini-table td:nth-child(4) {
+  color: var(--muted);
+  font-family: "Avenir Next", Avenir, "Gill Sans", "Trebuchet MS", sans-serif;
+  font-size: 12px;
+}
+
+.field-highlight,
+.line-highlight td {
+  background: var(--amber-wash);
+  box-shadow: inset 0 0 0 1px var(--amber-line);
+}
+
+.field-highlight {
+  color: #f2d28b;
+  padding: 2px 4px;
+}
+
+.issue-badge {
+  display: inline-flex;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border: 1px solid var(--amber-line);
+  color: var(--amber);
+  font-size: 11px;
+}
+
+.explanation-block {
+  margin: 0 14px 14px;
+  padding: 16px;
+  background: var(--panel-quiet);
+  border: 1px solid var(--line-soft);
+}
+
+.explanation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.answer {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.answer strong {
+  margin-bottom: 4px;
+  color: var(--amber);
 }
 
 .bundle {
@@ -320,7 +846,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .pill {
@@ -328,68 +854,63 @@ h1 {
   align-items: center;
   min-height: 26px;
   padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--amber-soft);
-  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--soft);
+  font-family: Menlo, Consolas, monospace;
   font-size: 12px;
   font-weight: 700;
 }
 
 .route-auto_accept {
-  background: rgba(158, 183, 126, 0.18);
+  border-color: rgba(125, 160, 105, 0.36);
   color: var(--ok);
 }
 
 .route-needs_review {
-  background: rgba(216, 164, 65, 0.18);
-  color: var(--review);
+  border-color: var(--amber-line);
+  color: var(--amber);
 }
 
 .route-blocked {
-  background: rgba(212, 118, 99, 0.18);
+  border-color: rgba(196, 122, 94, 0.36);
   color: var(--blocked);
 }
 
-.case-section,
 .command-section {
-  padding: 18px;
+  padding: 20px;
 }
 
-.table-wrap {
-  overflow-x: auto;
+.condensed-case-grid {
+  display: grid;
+  gap: 10px;
 }
 
-table {
-  width: 100%;
-  min-width: 860px;
-  border-collapse: collapse;
+.condensed-case {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.2fr) minmax(220px, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 0;
+  border-top: 1px solid var(--line-soft);
 }
 
-th,
-td {
-  padding: 12px 10px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
+.condensed-case:first-child {
+  border-top: 0;
 }
 
-th {
-  color: var(--amber);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-td {
+.condensed-case p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
-td:first-child,
-td:nth-child(4) {
-  color: var(--ink);
+.condensed-case .pills {
+  margin-top: 0;
+}
+
+.condensed-evidence {
   font-family: Menlo, Consolas, monospace;
-  font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 code {
@@ -407,23 +928,31 @@ code {
 
 .command-list li {
   padding: 11px 12px;
-  background: #1c1a17;
+  background: var(--panel-quiet);
   border: 1px solid var(--line);
-  border-radius: 8px;
   overflow-x: auto;
 }
 
 @media (max-width: 880px) {
   .hero,
   .notice-band,
-  .summary-grid,
-  .example-grid,
-  .pipeline ol {
+  .summary-strip,
+  .section-heading,
+  .rev-decision,
+  .rev-features,
+  .document-grid,
+  .explanation-grid,
+  .pipeline ol,
+  .condensed-case {
     grid-template-columns: 1fr;
   }
 
-  .metrics {
-    grid-template-columns: 1fr;
+  .hero-story {
+    padding: 32px 22px 28px;
+  }
+
+  .hero-note {
+    text-align: left;
   }
 }
 """.strip()
@@ -434,10 +963,10 @@ def _hero() -> str:
     <section class="hero">
       <div>
         <div class="kicker">Crosswise Reviewer</div>
-        <h1>Crosswise Reviewer</h1>
-        <p class="subtitle">AI Document Reconciliation</p>
+        <h1>Crosswise</h1>
+        <p class="subtitle">Static local reviewer for evidence-backed invoice, purchase order, and receipt reconciliation decisions.</p>
       </div>
-      <p class="hero-note">Static local reviewer interface for generated reconciliation, evaluation, and reliability outputs.</p>
+      <p class="hero-note">Synthetic test cases<br>Generated outputs only</p>
     </section>
 """.rstrip()
 
@@ -480,25 +1009,15 @@ def _metric_sections(evaluation: dict[str, Any], reliability: dict[str, Any]) ->
     evaluation_summary = evaluation.get("summary", {})
     reliability_summary = reliability.get("summary", {})
     return f"""
-    <section class="summary-grid" aria-label="Metrics summaries">
-      <div class="panel">
-        <h2>Evaluation Summary</h2>
-        <div class="metrics">
-          {_metric("Overall precision", evaluation_summary.get("overall_precision"))}
-          {_metric("Overall recall", evaluation_summary.get("overall_recall"))}
-          {_metric("Overall F1", evaluation_summary.get("overall_f1"))}
-          {_metric("Macro F1", evaluation_summary.get("macro_f1"))}
-        </div>
-      </div>
-      <div class="panel">
-        <h2>Reliability Summary</h2>
-        <div class="metrics">
-          {_metric("auto_accept count", reliability_summary.get("auto_accept"))}
-          {_metric("needs_review count", reliability_summary.get("needs_review"))}
-          {_metric("blocked count", reliability_summary.get("blocked"))}
-          {_metric("Average confidence", reliability_summary.get("average_confidence"))}
-        </div>
-      </div>
+    <section class="summary-strip" aria-label="Evaluation summary and reliability summary">
+      {_metric("Overall precision", evaluation_summary.get("overall_precision"))}
+      {_metric("Overall recall", evaluation_summary.get("overall_recall"))}
+      {_metric("Overall F1", evaluation_summary.get("overall_f1"))}
+      {_metric("Macro F1", evaluation_summary.get("macro_f1"))}
+      {_metric("auto_accept count", reliability_summary.get("auto_accept"))}
+      {_metric("needs_review count", reliability_summary.get("needs_review"))}
+      {_metric("blocked count", reliability_summary.get("blocked"))}
+      {_metric("Average confidence", reliability_summary.get("average_confidence"))}
     </section>
 """.rstrip()
 
@@ -563,6 +1082,455 @@ def _case_table(cases: list[dict[str, Any]], reliability_cases: dict[str, dict[s
 """.rstrip()
 
 
+def _hero_discrepancy_story(
+    case: dict[str, Any],
+    reliability: dict[str, Any],
+    fixture_index: dict[str, dict[str, Any]],
+) -> str:
+    route = reliability.get("reliability_route", case.get("route", "unknown"))
+    confidence = reliability.get("confidence_score")
+    confidence_pct = max(0, min(100, int(float(confidence or 0) * 100)))
+    po = fixture_index["purchase_orders"][case["purchase_order_id"]]
+    invoice = fixture_index["invoices"][case.get("invoice_ids", [""])[-1]]
+    discrepancy_count = len(case.get("discrepancy_labels", []))
+    discrepancy_word = "discrepancy" if discrepancy_count == 1 else "discrepancies"
+    po_label = _strip_prefix(po.get("purchase_order_id", "—"), "po_")
+    invoice_label = invoice.get("invoice_number", invoice.get("invoice_id", "—"))
+    return f"""
+    <section class="hero-story" id="document-panel-reconciliation-view" aria-labelledby="hero-story-title" data-hero-case="{_e(case['bundle_id'])}">
+      <header class="rev-brand">
+        <div class="rev-brand-id">
+          <span class="rev-diamond" aria-hidden="true"></span>
+          <div>
+            <div class="rev-wordmark">Crosswise</div>
+            <div class="rev-tagline">AI Document Reconciliation</div>
+          </div>
+        </div>
+        <div class="rev-build">
+          <span class="rev-build-line"><span class="rev-dot" aria-hidden="true"></span>Dev build</span>
+          <span class="rev-build-sub">synthetic test cases</span>
+        </div>
+      </header>
+
+      <div class="rev-context">
+        <span class="rev-context-doc">Invoice {_e(invoice_label)}</span>
+        <span class="rev-context-mid" id="hero-story-title">&#8644; Matching</span>
+        <span class="rev-context-doc rev-context-doc-end">PO {_e(po_label)}</span>
+      </div>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table" data-hero-comparison="true">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="num">Invoice</th>
+              <th class="num">PO</th>
+              <th class="num">&#916;</th>
+              <th class="status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+{_hero_comparison_body(case, fixture_index)}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rev-decision">
+        <section class="hero-confidence" aria-label="Model confidence">
+          <div class="condensed-label">Model confidence</div>
+          <div class="confidence-number">{_e(_format_metric(confidence))}<span>below threshold</span></div>
+          <div class="confidence-track"><span class="confidence-fill" style="width: {confidence_pct}%"></span></div>
+        </section>
+        <section class="hero-action" aria-label="Route action">
+          <div class="condensed-label">Action</div>
+          <div class="action-button">&#8594; Route to human review</div>
+          <p>{discrepancy_count} {discrepancy_word} &middot; evidence linked &middot; {_e(route)} route assigned</p>
+        </section>
+      </div>
+
+      <div class="rev-features">
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9671;</span>
+          <h3>Line-item matching</h3>
+          <p>Every line compared &mdash; not just document totals.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9723;</span>
+          <h3>Field-level evidence</h3>
+          <p>Each result traces back to its source field.</p>
+        </div>
+        <div class="rev-feature">
+          <span class="rev-glyph" aria-hidden="true">&#9711;</span>
+          <h3>Human review routing</h3>
+          <p>Low-confidence cases escalate to a person.</p>
+        </div>
+      </div>
+
+      <footer class="rev-foot">
+        <span>AI Document Reconciliation</span>
+        <span>invoices &middot; purchase orders &middot; receipts</span>
+      </footer>
+    </section>
+""".rstrip()
+
+
+def _hero_comparison_body(case: dict[str, Any], fixture_index: dict[str, dict[str, Any]]) -> str:
+    return "\n".join(_hero_comparison_row(*row) for row in _hero_comparison_rows(case, fixture_index))
+
+
+def _hero_comparison_row(
+    field: str,
+    invoice_value: str,
+    po_value: str,
+    delta: str,
+    is_disagreement: bool,
+) -> str:
+    row_class = ' class="is-disagreement"' if is_disagreement else ""
+    if is_disagreement:
+        status_cell = '<td class="status status-review">&#9873; review</td>'
+    else:
+        status_cell = '<td class="status status-match">&#10003; match</td>'
+    delta_cell = _e(delta) if is_disagreement else "&mdash;"
+    return f"""
+            <tr{row_class}>
+              <td>{_e(field)}</td>
+              <td class="num">{_e(invoice_value)}</td>
+              <td class="num">{_e(po_value)}</td>
+              <td class="num">{delta_cell}</td>
+              {status_cell}
+            </tr>
+""".rstrip()
+
+
+def _hero_comparison_rows(
+    case: dict[str, Any],
+    fixture_index: dict[str, dict[str, Any]],
+) -> list[tuple[str, str, str, str, bool]]:
+    """Build the lead comparison as an Invoice-vs-PO field table.
+
+    Values are read straight from the generated fixtures and the discrepant
+    line match already produced by reconciliation; nothing is recomputed.
+    """
+    po = fixture_index["purchase_orders"][case["purchase_order_id"]]
+    invoice = fixture_index["invoices"][case.get("invoice_ids", [""])[-1]]
+    supplier = fixture_index["suppliers"][po["supplier_id"]]
+    currency = invoice.get("currency", po.get("currency", "EUR"))
+
+    line_matches = case.get("line_matches", [])
+    discrepant = next(
+        (match for match in line_matches if match.get("labels") and match.get("labels") != ["clean_match"]),
+        line_matches[0] if line_matches else {},
+    )
+    po_line = fixture_index["purchase_order_lines"].get(discrepant.get("po_line_id", ""))
+    invoice_line = fixture_index["invoice_lines"].get(discrepant.get("invoice_line_id", ""))
+
+    inv_vendor = invoice.get("supplier_name_raw", supplier.get("canonical_name"))
+    po_vendor = supplier.get("canonical_name")
+    rows: list[tuple[str, str, str, str, bool]] = [
+        ("Vendor", str(inv_vendor), str(po_vendor), "", str(inv_vendor) != str(po_vendor)),
+    ]
+
+    if po_line and invoice_line:
+        rows.append(_hero_numeric_row(
+            "Quantity",
+            invoice_line.get("quantity_billed"),
+            po_line.get("quantity_ordered"),
+        ))
+        rows.append(_hero_money_row(
+            "Unit price",
+            invoice_line.get("unit_price"),
+            po_line.get("unit_price"),
+            currency,
+        ))
+        rows.append(_hero_money_row(
+            "Line total",
+            invoice_line.get("line_total"),
+            po_line.get("line_total"),
+            currency,
+        ))
+
+    rows.append(_hero_money_row(
+        "Tax",
+        invoice.get("tax_amount"),
+        po.get("tax_amount"),
+        currency,
+    ))
+    return rows
+
+
+def _hero_numeric_row(field: str, invoice_value: Any, po_value: Any) -> tuple[str, str, str, str, bool]:
+    inv = _to_float(invoice_value)
+    pov = _to_float(po_value)
+    is_disagreement = inv is not None and pov is not None and inv != pov
+    delta = ""
+    if is_disagreement:
+        diff = inv - pov
+        delta = f"{'+' if diff >= 0 else '−'}{abs(diff):g}"
+    return (field, _trim_number(invoice_value), _trim_number(po_value), delta, is_disagreement)
+
+
+def _hero_money_row(field: str, invoice_value: Any, po_value: Any, currency: str) -> tuple[str, str, str, str, bool]:
+    inv = _to_float(invoice_value)
+    pov = _to_float(po_value)
+    is_disagreement = inv is not None and pov is not None and inv != pov
+    delta = ""
+    if is_disagreement:
+        diff = inv - pov
+        delta = f"{'+' if diff >= 0 else '−'}{_eur(abs(diff), currency)}"
+    return (
+        field,
+        _eur(invoice_value, currency),
+        _eur(po_value, currency),
+        delta,
+        is_disagreement,
+    )
+
+
+def _document_panel_stories(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+    fixture_index: dict[str, dict[str, Any]],
+    hero_bundle_id: str,
+) -> str:
+    remaining = [case for case in cases if case["bundle_id"] != hero_bundle_id]
+    story_cards = "\n".join(
+        _document_story(case, reliability_cases.get(case["bundle_id"], {}), fixture_index, condensed=True)
+        for case in remaining
+    )
+    return f"""
+    <section class="story-section" aria-labelledby="document-panel-title">
+      <div class="section-heading">
+        <div>
+          <div class="kicker">Remaining generated cases</div>
+          <h2 id="document-panel-title">Condensed Review Queue</h2>
+        </div>
+        <p>All other bundles remain visible with route, confidence, evidence, explanation, and document panels preserved from existing generated outputs.</p>
+      </div>
+      <div class="story-list">
+{story_cards}
+      </div>
+    </section>
+""".rstrip()
+
+
+def _document_story(
+    case: dict[str, Any],
+    reliability: dict[str, Any],
+    fixture_index: dict[str, dict[str, Any]],
+    condensed: bool = False,
+) -> str:
+    bundle_id = case["bundle_id"]
+    labels = case.get("discrepancy_labels", [])
+    route = reliability.get("reliability_route", case.get("route", "unknown"))
+    first_evidence = _first_evidence(case)
+    compact_summary = ""
+    if condensed:
+        compact_summary = f"""
+          <div class="condensed-case-grid" data-condensed-case="{_e(bundle_id)}">
+            <div class="condensed-case">
+              <div>
+                <div class="condensed-label">Bundle</div>
+                <p class="bundle">{_e(bundle_id)}</p>
+              </div>
+              <div>
+                <div class="condensed-label">Evidence</div>
+                <p class="condensed-evidence">{_e(_evidence_summary(first_evidence))}</p>
+              </div>
+              <div class="pills">
+                {_label_pills(labels)}
+                <span class="pill route-{_class_token(route)}">{_e(route)}</span>
+                <span class="pill">confidence {_e(_format_metric(reliability.get("confidence_score")))}</span>
+              </div>
+            </div>
+          </div>
+""".rstrip()
+    return f"""
+        <article class="story-card" data-curated-case="{_e(bundle_id)}">
+          <div class="story-topline">
+            <div class="story-title">
+              <h3>{_e(_story_title(labels))}</h3>
+              <p class="bundle">{_e(bundle_id)}</p>
+            </div>
+            <div class="pills">
+              <span class="pill route-{_class_token(route)}">{_e(route)}</span>
+              <span class="pill">{_e(_format_metric(reliability.get("confidence_score")))}</span>
+            </div>
+          </div>
+          {compact_summary}
+          <div class="document-grid">
+            {_purchase_order_panel(case, fixture_index)}
+            {_invoice_panel(case, fixture_index)}
+            {_receipt_panel(case, fixture_index)}
+          </div>
+          {_explanation_block(case, reliability)}
+        </article>
+""".rstrip()
+
+
+def _purchase_order_panel(case: dict[str, Any], fixture_index: dict[str, dict[str, Any]]) -> str:
+    po = fixture_index["purchase_orders"][case["purchase_order_id"]]
+    supplier = fixture_index["suppliers"][po["supplier_id"]]
+    lines = [fixture_index["purchase_order_lines"][line_id] for line_id in po.get("line_ids", [])]
+    return f"""
+            <section class="doc-panel" data-document-panel="Purchase Order">
+              <h4>Purchase Order</h4>
+              <p class="doc-id">{_e(po["purchase_order_id"])}</p>
+              <div class="doc-meta">
+                {_meta_row("Supplier", supplier["canonical_name"], _header_highlight(case, po["purchase_order_id"], "supplier"))}
+                {_meta_row("Date", po["issue_date"], False)}
+                {_meta_row("Expected", po["expected_receipt_date"], False)}
+                {_meta_row("Total", _money(po["total_amount"], po["currency"]), False)}
+              </div>
+              {_line_table("PO", lines, case)}
+            </section>
+""".rstrip()
+
+
+def _invoice_panel(case: dict[str, Any], fixture_index: dict[str, dict[str, Any]]) -> str:
+    invoices = [fixture_index["invoices"][invoice_id] for invoice_id in case.get("invoice_ids", [])]
+    blocks = []
+    for invoice in invoices:
+        lines = [fixture_index["invoice_lines"][line_id] for line_id in invoice.get("line_ids", [])]
+        duplicate_badge = ""
+        if invoice.get("duplicate_of_invoice_id"):
+            duplicate_badge = f'<span class="issue-badge">duplicate of {_e(invoice["duplicate_of_invoice_id"])}</span>'
+        blocks.append(
+            f"""
+              <div class="sub-document">
+                <p class="doc-id">{_field_span(invoice["invoice_id"], _header_highlight(case, invoice["invoice_id"], "invoice_id"))}{duplicate_badge}</p>
+                <div class="doc-meta">
+                  {_meta_row("Supplier", invoice["supplier_name_raw"], _header_highlight(case, invoice["invoice_id"], "supplier"))}
+                  {_meta_row("Number", invoice["invoice_number"], _header_highlight(case, invoice["invoice_id"], "invoice_number"))}
+                  {_meta_row("Date", invoice["invoice_date"], _header_highlight(case, invoice["invoice_id"], "invoice_date"))}
+                  {_meta_row("Total", _money(invoice["total_amount"], invoice["currency"]), _header_highlight(case, invoice["invoice_id"], "total_amount"))}
+                </div>
+                {_line_table("Invoice", lines, case)}
+              </div>
+""".rstrip()
+        )
+    return f"""
+            <section class="doc-panel" data-document-panel="Invoice">
+              <h4>Invoice</h4>
+{chr(10).join(blocks)}
+            </section>
+""".rstrip()
+
+
+def _receipt_panel(case: dict[str, Any], fixture_index: dict[str, dict[str, Any]]) -> str:
+    receipts = [fixture_index["receipts"][receipt_id] for receipt_id in case.get("receipt_ids", [])]
+    blocks = []
+    for receipt in receipts:
+        supplier = fixture_index["suppliers"][receipt["supplier_id"]]
+        lines = [fixture_index["receipt_lines"][line_id] for line_id in receipt.get("line_ids", [])]
+        blocks.append(
+            f"""
+              <div class="sub-document">
+                <p class="doc-id">{_e(receipt["receipt_id"])}</p>
+                <div class="doc-meta">
+                  {_meta_row("Supplier", receipt.get("supplier_name_raw", supplier["canonical_name"]), _header_highlight(case, receipt["receipt_id"], "supplier"))}
+                  {_meta_row("Number", receipt["receipt_number"], False)}
+                  {_meta_row("Date", receipt["receipt_date"], _header_highlight(case, receipt["receipt_id"], "receipt_date"))}
+                  {_meta_row("PO", receipt["related_purchase_order_id"], False)}
+                </div>
+                {_line_table("Receipt", lines, case)}
+              </div>
+""".rstrip()
+        )
+    return f"""
+            <section class="doc-panel" data-document-panel="Receipt">
+              <h4>Receipt</h4>
+{chr(10).join(blocks)}
+            </section>
+""".rstrip()
+
+
+def _line_table(kind: str, lines: list[dict[str, Any]], case: dict[str, Any]) -> str:
+    if kind == "PO":
+        headers = ["Item", "Qty", "Unit", "Total"]
+        rows = [
+            [
+                line["description"],
+                line["quantity_ordered"],
+                line["unit_price"],
+                line["line_total"],
+                line["po_line_id"],
+            ]
+            for line in sorted(lines, key=lambda item: item["line_number"])
+        ]
+    elif kind == "Invoice":
+        headers = ["Item", "Qty", "Unit", "Total"]
+        rows = [
+            [
+                line["description"],
+                line["quantity_billed"],
+                line["unit_price"],
+                line["line_total"],
+                line["invoice_line_id"],
+            ]
+            for line in sorted(lines, key=lambda item: item["line_number"])
+        ]
+    else:
+        headers = ["Item", "Qty", "Unit", "Received"]
+        rows = [
+            [
+                line["sku_raw"],
+                line["quantity_received"],
+                line["unit_of_measure"],
+                line["received_date"],
+                line["receipt_line_id"],
+            ]
+            for line in sorted(lines, key=lambda item: item["line_number"])
+        ]
+
+    header_html = "".join(f"<th>{_e(header)}</th>" for header in headers)
+    row_html = "\n".join(_line_row(kind, row, case) for row in rows)
+    return f"""
+              <table class="mini-table">
+                <thead><tr>{header_html}</tr></thead>
+                <tbody>
+{row_html}
+                </tbody>
+              </table>
+""".rstrip()
+
+
+def _line_row(kind: str, row: list[str], case: dict[str, Any]) -> str:
+    item, qty, unit, total_or_date, line_id = row
+    line_class = ' class="line-highlight"' if _line_highlight(case, line_id) else ""
+    qty_highlight = _field_highlight(case, line_id, _quantity_field(kind))
+    unit_highlight = _field_highlight(case, line_id, _unit_field(kind))
+    return f"""
+                  <tr{line_class}>
+                    <td>{_e(item)}</td>
+                    <td>{_field_span(qty, qty_highlight)}</td>
+                    <td>{_field_span(unit, unit_highlight)}</td>
+                    <td>{_e(total_or_date)}</td>
+                  </tr>
+""".rstrip()
+
+
+def _explanation_block(case: dict[str, Any], reliability: dict[str, Any]) -> str:
+    evidence = case.get("evidence", [])
+    labels = case.get("discrepancy_labels", [])
+    first_evidence = evidence[0] if evidence else {}
+    route = reliability.get("reliability_route", case.get("route", "unknown"))
+    return f"""
+          <section class="explanation-block" data-explanation-block="{_e(case['bundle_id'])}">
+            <div class="pills">
+              {_label_pills(labels)}
+              <span class="pill route-{_class_token(route)}">{_e(route)}</span>
+              <span class="pill">confidence {_e(_format_metric(reliability.get("confidence_score")))}</span>
+            </div>
+            <div class="explanation-grid">
+              <p class="answer"><strong>What happened?</strong>{_e(_story_title(labels))}</p>
+              <p class="answer"><strong>Why flagged?</strong>{_e(first_evidence.get("explanation", case.get("explanation", "No discrepancy evidence items; deterministic line matches are clean.")))}</p>
+              <p class="answer"><strong>Evidence</strong>{_e(_evidence_summary(first_evidence))}</p>
+              <p class="answer"><strong>Route assigned</strong>{_e(route)} for local human-review workflow support.</p>
+            </div>
+          </section>
+""".rstrip()
+
+
 def _case_row(case: dict[str, Any], reliability: dict[str, Any]) -> str:
     route = reliability.get("reliability_route", case.get("route", "unknown"))
     return f"""
@@ -607,6 +1575,156 @@ def _metric(label: str, value: Any) -> str:
 """.rstrip()
 
 
+def _fixture_index(fixtures: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        "suppliers": {item["supplier_id"]: item for item in fixtures.get("suppliers", [])},
+        "purchase_orders": {item["purchase_order_id"]: item for item in fixtures.get("purchase_orders", [])},
+        "purchase_order_lines": {item["po_line_id"]: item for item in fixtures.get("purchase_order_lines", [])},
+        "invoices": {item["invoice_id"]: item for item in fixtures.get("invoices", [])},
+        "invoice_lines": {item["invoice_line_id"]: item for item in fixtures.get("invoice_lines", [])},
+        "receipts": {item["receipt_id"]: item for item in fixtures.get("receipts", [])},
+        "receipt_lines": {item["receipt_line_id"]: item for item in fixtures.get("receipt_lines", [])},
+    }
+
+
+def _story_title(labels: list[str]) -> str:
+    if labels == ["clean_match"]:
+        return "Clean match across PO, invoice, and receipt"
+    return ", ".join(label.replace("_", " ") for label in labels).title()
+
+
+def _meta_row(label: str, value: Any, highlight: bool) -> str:
+    return f"""
+                  <div class="meta-row">
+                    <span>{_e(label)}</span>
+                    <span>{_field_span(value, highlight)}</span>
+                  </div>
+""".rstrip()
+
+
+def _field_span(value: Any, highlight: bool) -> str:
+    css_class = ' class="field-highlight"' if highlight else ""
+    return f"<span{css_class}>{_e(value)}</span>"
+
+
+def _money(amount: Any, currency: str) -> str:
+    return f"{amount} {currency}"
+
+
+def _strip_prefix(value: str, prefix: str) -> str:
+    text = str(value)
+    if text.lower().startswith(prefix.lower()):
+        return text[len(prefix):]
+    return text
+
+
+_CURRENCY_SYMBOLS = {"EUR": "€", "USD": "$", "GBP": "£"}
+
+
+def _to_float(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _trim_number(value: Any) -> str:
+    number = _to_float(value)
+    if number is None:
+        return str(value)
+    if number == int(number):
+        return str(int(number))
+    return f"{number:g}"
+
+
+def _eur(amount: Any, currency: str) -> str:
+    number = _to_float(amount)
+    symbol = _CURRENCY_SYMBOLS.get(currency, "")
+    if number is None:
+        return f"{amount} {currency}".strip()
+    formatted = f"{number:,.2f}"
+    if symbol:
+        return f"{symbol}{formatted}"
+    return f"{formatted} {currency}".strip()
+
+
+def _line_highlight(case: dict[str, Any], line_id: str) -> bool:
+    affected = _affected_line_ids(case)
+    labels = set(case.get("discrepancy_labels", []))
+    return bool(affected and line_id in affected and labels & {"quantity_mismatch", "unit_price_mismatch"})
+
+
+def _field_highlight(case: dict[str, Any], line_id: str, field_name: str) -> bool:
+    labels = set(case.get("discrepancy_labels", []))
+    if "quantity_mismatch" in labels and line_id in _affected_line_ids(case):
+        return field_name in {"quantity_ordered", "quantity_billed", "quantity_received"}
+    if "unit_price_mismatch" in labels and line_id in _affected_line_ids(case):
+        return field_name in {"po_line.unit_price", "invoice_line.unit_price"}
+    if "low_confidence_extraction" in labels:
+        source_document = _first_evidence(case).get("observed_values", {}).get("source_document_id")
+        if source_document and line_id.startswith("inv_line_"):
+            return field_name == "invoice_line.unit_price"
+    return False
+
+
+def _header_highlight(case: dict[str, Any], document_id: str, field_name: str) -> bool:
+    labels = set(case.get("discrepancy_labels", []))
+    evidence = _first_evidence(case)
+    affected_documents = set(evidence.get("affected_document_ids", []))
+    compared_fields = set(evidence.get("compared_fields", []))
+    observed = evidence.get("observed_values", {})
+
+    if "supplier_alias_mismatch" in labels:
+        return document_id in affected_documents and field_name == "supplier"
+    if "duplicate_invoice" in labels:
+        return document_id in affected_documents and field_name in {"invoice_id", "invoice_number", "invoice_date", "total_amount"}
+    if "low_confidence_extraction" in labels:
+        return observed.get("source_document_id") == document_id and field_name in compared_fields
+    if "schema_validation_failure" in labels:
+        return observed.get("source_document_id") == document_id and field_name in compared_fields
+    return False
+
+
+def _affected_line_ids(case: dict[str, Any]) -> set[str]:
+    return {
+        line_id
+        for evidence in case.get("evidence", [])
+        for line_id in evidence.get("affected_line_ids", [])
+    }
+
+
+def _first_evidence(case: dict[str, Any]) -> dict[str, Any]:
+    evidence = case.get("evidence", [])
+    return evidence[0] if evidence else {}
+
+
+def _quantity_field(kind: str) -> str:
+    return {
+        "PO": "quantity_ordered",
+        "Invoice": "quantity_billed",
+        "Receipt": "quantity_received",
+    }[kind]
+
+
+def _unit_field(kind: str) -> str:
+    return {
+        "PO": "po_line.unit_price",
+        "Invoice": "invoice_line.unit_price",
+        "Receipt": "receipt_line.unit_of_measure",
+    }[kind]
+
+
+def _evidence_summary(evidence: dict[str, Any]) -> str:
+    if not evidence:
+        return "Clean deterministic line matches across purchase order, invoice, and receipt."
+    basis = evidence.get("detection_basis", "unknown_basis")
+    values = evidence.get("observed_values", {})
+    value_summary = ", ".join(f"{key}={value}" for key, value in sorted(values.items()))
+    if value_summary:
+        return f"{basis}: {value_summary}"
+    return basis
+
+
 def _label_pills(labels: list[str]) -> str:
     return "".join(f'<span class="pill">{_e(label)}</span>' for label in labels)
 
@@ -628,6 +1746,44 @@ def _first_route_case(
         ),
         None,
     )
+
+
+def _select_hero_case(
+    cases: list[dict[str, Any]],
+    reliability_cases: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    # Presentation-only hero selection. Prefer the discrepancy types that read
+    # most clearly as a field-level comparison (unit price, then quantity), so
+    # the lead story communicates "Crosswise found a discrepancy and explains
+    # why" at a glance. This does not change reconciliation, evaluation,
+    # reliability, routing, or generated data.
+    preferred_labels = (["unit_price_mismatch"], ["quantity_mismatch"])
+    for labels in preferred_labels:
+        match = next((case for case in cases if case.get("discrepancy_labels") == labels), None)
+        if match is not None:
+            return match
+
+    needs_review = next(
+        (
+            case
+            for case in cases
+            if reliability_cases.get(case["bundle_id"], {}).get("reliability_route") == "needs_review"
+        ),
+        None,
+    )
+    if needs_review is not None:
+        return needs_review
+
+    non_clean = next(
+        (case for case in cases if case.get("discrepancy_labels") != ["clean_match"]),
+        None,
+    )
+    if non_clean is not None:
+        return non_clean
+
+    if not cases:
+        raise ValueError("Static reviewer requires at least one reconciliation case.")
+    return cases[0]
 
 
 def _format_metric(value: Any) -> str:

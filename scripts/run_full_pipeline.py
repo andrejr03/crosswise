@@ -37,6 +37,7 @@ def main() -> int:
     print("- data/reliability/reliability_v1_0.json", flush=True)
     print("- docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md", flush=True)
     print("- docs/evidence/crosswise_reviewer_v1_0.html", flush=True)
+    print("- docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png", flush=True)
     return 0
 
 

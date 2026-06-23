@@ -13,6 +13,7 @@ REQUIRED_OUTPUTS = [
     "data/reliability/reliability_v1_0.json",
     "docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md",
     "docs/evidence/crosswise_reviewer_v1_0.html",
+    "docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png",
 ]
 
 
@@ -50,6 +51,7 @@ def test_readme_links_generated_evidence_and_reviewer() -> None:
 
     assert "docs/evidence/CROSSWISE_LOCAL_EVIDENCE_REPORT_v1.0.md" in readme
     assert "docs/evidence/crosswise_reviewer_v1_0.html" in readme
+    assert "docs/evidence/CROSSWISE_REVIEWER_DISCREPANCY_SHOWCASE.png" in readme
     assert "docs/evidence/INDEX.md" in readme
 
 
